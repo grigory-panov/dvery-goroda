@@ -3,7 +3,7 @@
 <fmt:setBundle basename="messages.category" var="categoryMessage"/>
 
 <div class="container">
-<form action='<c:url value="categoryList.html"/>' class="form-horizontal" method="POST" role="form">
+<form action='<c:url value="categoryList.html"/>' class="form-horizontal"  method="POST" role="form">
 <c:if test="${not empty category}">
     <input name="id" type="hidden" value="${category.id}">
     <div class="form-group">
@@ -16,7 +16,7 @@
     <div class="form-group">
          <label for="description" class="col-sm-2 control-label"><fmt:message key="table.description" bundle="${common}"/></label>
          <div class="col-sm-10">
-            <input type="text" class="form-control" value="${category.description}" id="description" name="descriptione"
+            <input type="text" class="form-control" value="${category.description}" id="description" name="description"
             placeholder='<fmt:message key="category.description.placeholder" bundle="${categoryMessage}"/>' tabindex="2">
          </div>
     </div>

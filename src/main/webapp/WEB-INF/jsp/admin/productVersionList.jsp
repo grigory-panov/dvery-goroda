@@ -1,5 +1,6 @@
 <%@ include file="/WEB-INF/jsp/admin/include.jsp" %>
 <%@ include file="/WEB-INF/jsp/admin/header.jsp" %>
+<fmt:setBundle basename="messages.products" var="productMessages"/>
 
 <div class="container">
 
@@ -7,13 +8,22 @@
 <p class="text-info">${message}</p>
 </c:if>
 
-<h3>${category.name} - ${product.name}</h3>
+<h3><a href='<c:url value="categoryList.html"/>'>${category.name}</a> - <a href='<c:url value="productList.html?categoryId=${category.id}"/>'>${product.name}</a></h3>
 
-<a href='<c:url value="productVersionAdd.html?productId=${product.id}"/>'>Add new product version</a>
+<a href='<c:url value="productVersionAdd.html?productId=${product.id}"/>'><fmt:message key="version.add.link" bundle="${productMessages}"/></a>
 
 <c:if test="${not empty productVersions}">
     <table class="table">
-
+        <tr>
+            <th><fmt:message key="table.id" bundle="${common}"/></th>
+            <th><fmt:message key="table.name" bundle="${common}"/></th>
+            <th><fmt:message key="table.description" bundle="${common}"/></th>
+            <th><fmt:message key="version.price.name" bundle="${productMessages}"/></th>
+            <th><fmt:message key="version.size.name" bundle="${productMessages}"/></th>
+            <th><fmt:message key="version.order.name" bundle="${productMessages}"/></th>
+            <th><fmt:message key="version.image.name" bundle="${productMessages}"/></th>
+            <th><fmt:message key="table.delete" bundle="${common}"/></th>
+        </tr>
         <c:forEach var="o" items="${productVersions}">
             <tr>
                 <td>${o.id}</td>
@@ -27,6 +37,9 @@
             </tr>
         </c:forEach>
     </table>
+</c:if>
+<c:if test="${empty productVersions}">
+    <p><fmt:message key="versions.list.empty" bundle="${productMessages}"/></p>
 </c:if>
 </div>
 <%@ include file="/WEB-INF/jsp/admin/footer.jsp" %>

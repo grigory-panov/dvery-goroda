@@ -28,11 +28,11 @@ public class InfoService {
         return infoDao.findAll();
     }
 
-    public Info findById(Long id){
+    public Info findById(long id){
         return infoDao.findById(id);
     }
 
-    public Info findByIdWithDeleted(Long id){
+    public Info findByIdWithDeleted(long id){
         return infoDao.findByIdWithDeleted(id);
     }
 

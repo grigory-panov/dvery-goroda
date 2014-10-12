@@ -60,21 +60,31 @@ public class InfoController {
     public ModelAndView gsaveInfo(@RequestParam(value = "id", required = false) Long id,
                                   @RequestParam(value = "header", required = true) String header,
                                   @RequestParam(value = "body", required = true) String body){
-
-        Info info = infoService.findById(id);
-        if(info == null){
+        Map<String, Object> params = new HashMap<String, Object>();
+        Info info = null;
+        if(id ==null){
+             info = infoService.findById(id);
+        }else{
             info = new Info();
         }
-        info.setHeader(header);
-        info.setBody(body);
+        if(info != null){
+            info.setHeader(header);
+            info.setBody(body);
 
-        if(info.getId() == null){
-            infoService.addInfo(info);
+            try{
+                if(info.getId() == null){
+                    infoService.addInfo(info);
+                }else{
+                    infoService.updateInfo(info);
+                }
+                params.put("message", "Успешно сохранено");
+            }catch (Exception ex){
+                params.put("message", "Произошла ошибка при сохранении статьи");
+            }
         }else{
-            infoService.updateInfo(info);
+            params.put("message", "Статья не найдена");
         }
 
-        Map<String, Object> params = new HashMap<String, Object>();
         params.put("infos", infoService.findAll());
         params.put("title",  "Список информационных статей");
 

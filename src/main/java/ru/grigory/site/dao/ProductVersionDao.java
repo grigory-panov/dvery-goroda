@@ -36,7 +36,7 @@ public class ProductVersionDao {
         return jdbcTemplate.query(query, new ProductVersionMapper(), productId);
     }
 
-    public ProductVersion findById(Long id) {
+    public ProductVersion findById(long id) {
         String query = "select * from product_version where id = ? and deleted = false";
         try{
             return jdbcTemplate.queryForObject(query, new ProductVersionMapper(), id);
@@ -46,7 +46,7 @@ public class ProductVersionDao {
 
     }
 
-    public ProductVersion findFirstVersion(Long productId) {
+    public ProductVersion findFirstVersion(long productId) {
         String query = "select * from product_version where product_id = ? and deleted = false order by \"order\" limit 1";
         try{
             return jdbcTemplate.queryForObject(query, new ProductVersionMapper(), productId);

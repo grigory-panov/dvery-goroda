@@ -50,27 +50,29 @@ public class ProductController {
 
 
     @RequestMapping(value = "product.html", method = RequestMethod.GET)
-    public ModelAndView getProduct(){
+    public ModelAndView getProduct() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("categories", categoryService.findAll());
-        params.put("title",  "Двери города - описание товара");
+        params.put("title", "Двери города - описание товара");
 
         return new ModelAndView("product", params);
     }
 
     @RequestMapping(value = "admin/productList.html", method = RequestMethod.GET)
-    public ModelAndView getProductList(@RequestParam(value = "categoryId") long categoryId){
+    @Secured(value = "ROLE_ADMIN")
+    public ModelAndView getProductList(@RequestParam(value = "categoryId") long categoryId) {
         Map<String, Object> params = new HashMap<String, Object>();
 //        params.put("categories", categoryService.findAll());
         params.put("category", categoryService.findById(categoryId));
         params.put("products", productService.findByCategory(categoryId));
-        params.put("title",  "Редактирование товаров в категории" );
+        params.put("title", "Редактирование товаров в категории");
 
         return new ModelAndView("admin/productList", params);
     }
 
     @RequestMapping(value = "admin/productVersionList.html", method = RequestMethod.GET)
-    public ModelAndView getProductVersionList(@RequestParam(value = "productId") long productId){
+    @Secured(value = "ROLE_ADMIN")
+    public ModelAndView getProductVersionList(@RequestParam(value = "productId") long productId) {
         Map<String, Object> params = new HashMap<String, Object>();
         Product product = productService.findById(productId);
 
@@ -78,103 +80,122 @@ public class ProductController {
         params.put("category", categoryService.findById(product.getCategoryId()));
         params.put("product", product);
         params.put("productVersions", productVersionService.findByProduct(productId));
-        params.put("title",  "Редактирование версий товара" );
+        params.put("title", "Редактирование версий товара");
 
         return new ModelAndView("admin/productVersionList", params);
     }
+
     @RequestMapping(value = "admin/productVersionEdit.html", method = RequestMethod.GET)
-    public ModelAndView editProductVersion(@RequestParam(value = "id") long id){
+    @Secured(value = "ROLE_ADMIN")
+    public ModelAndView editProductVersion(@RequestParam(value = "id") long id) {
         Map<String, Object> params = new HashMap<String, Object>();
         ProductVersion productVersion = productVersionService.findById(id);
-        if(productVersion == null){
+        if (productVersion == null) {
             throw new BusinessException("Product version not found!");
         }
         Product product = productService.findById(productVersion.getProductId());
         params.put("productVersion", productVersionService.findById(id));
         params.put("product", product);
-        params.put("title",  "Редактирование версии" );
+        params.put("title", "Редактирование версии");
 
         return new ModelAndView("admin/productVersionEdit", params);
     }
 
     @RequestMapping(value = "admin/productVersionAdd.html", method = RequestMethod.GET)
-    public ModelAndView addProductVersion(@RequestParam(value = "productId") long productId){
+    @Secured(value = "ROLE_ADMIN")
+    public ModelAndView addProductVersion(@RequestParam(value = "productId") long productId) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("product", productService.findById(productId));
-        params.put("title",  "Добавление версии" );
+        params.put("title", "Добавление версии");
 
         return new ModelAndView("admin/productVersionAdd", params);
     }
+
     @RequestMapping(value = "admin/productVersionList.html", method = RequestMethod.POST)
     @Secured(value = "ROLE_ADMIN")
     public ModelAndView saveProductVersion(@RequestParam(value = "id", required = false) Long id,
-                                    @RequestParam(value = "name") String name,
-                                    @RequestParam(value = "description", required = false) String description,
-                                    @RequestParam(value = "productId") Long productId,
-                                    @RequestParam(value = "price") BigDecimal price,
-                                    @RequestParam(value = "order") Integer order,
-                                    @RequestParam(value = "size") String size,
-                                    @RequestParam(value = "img", required = false) MultipartFile file){
+                                           @RequestParam(value = "name", required = true) String name,
+                                           @RequestParam(value = "description", required = false) String description,
+                                           @RequestParam(value = "productId", required = true) Long productId,
+                                           @RequestParam(value = "price", required = true) BigDecimal price,
+                                           @RequestParam(value = "order", required = true) Integer order,
+                                           @RequestParam(value = "size", required = true) String size,
+                                           @RequestParam(value = "img", required = false) MultipartFile file) {
 
-        ProductVersion productVersion = productVersionService.findById(id);
-        if(productVersion == null){
+
+        ProductVersion productVersion = null;
+        Map<String, Object> params = new HashMap<String, Object>();
+
+        if (id == null) {
+            productVersion = productVersionService.findById(id);
+        } else {
             productVersion = new ProductVersion();
         }
+        if (productVersion != null) {
+            productVersion.setName(name);
+            productVersion.setDescription(description);
+            productVersion.setProductId(productId);
+            productVersion.setPrice(price);
+            productVersion.setOrder(order);
+            productVersion.setSize(size);
 
-        productVersion.setName(name);
-        productVersion.setDescription(description);
-        productVersion.setProductId(productId);
-        productVersion.setPrice(price);
-        productVersion.setOrder(order);
-        productVersion.setSize(size);
-
-        if(productVersion.getId() == null){
-            productVersionService.addProductVersion(productVersion);
-        }else{
-            productVersionService.updateProductVersion(productVersion);
-        }
-
-        if(!file.isEmpty()){
-            try{
-                ImagesController.storeFile(file, productVersion.getId(), productId);
-            } catch (IOException ex) {
+            try {
+                if (productVersion.getId() == null) {
+                    productVersionService.addProductVersion(productVersion);
+                } else {
+                    productVersionService.updateProductVersion(productVersion);
+                }
+            } catch (Exception ex) {
                 logger.error(ex.getMessage(), ex);
+                params.put("message", "Версия продукта не сохраненв из-за ошибки");
             }
+            params.put("message", "Версия продукта успешно сохранена");
+            if (!file.isEmpty()) {
+                try {
+                    ImagesController.storeFile(file, productVersion.getId(), productId);
+                } catch (IOException ex) {
+                    logger.error(ex.getMessage(), ex);
+                    params.put("message", "Версия продукта сохраненв  но изображение нет");
+                }
+            }
+
+        } else {
+            params.put("message", "Не найдена версия продукта");
         }
 
-        Map<String, Object> params = new HashMap<String, Object>();
         Product product = productService.findById(productId);
-
         params.put("category", categoryService.findById(product.getCategoryId()));
         params.put("product", product);
         params.put("productVersions", productVersionService.findByProduct(productId));
-        params.put("title",  "Редактирование версий товара" );
+        params.put("title", "Редактирование версий товара");
 
         return new ModelAndView("admin/productVersionList", params);
     }
 
     @RequestMapping(value = "admin/productEdit.html", method = RequestMethod.GET)
-    public ModelAndView editProduct(@RequestParam(value = "id") long productId){
+    @Secured(value = "ROLE_ADMIN")
+    public ModelAndView editProduct(@RequestParam(value = "id") long productId) {
         Map<String, Object> params = new HashMap<String, Object>();
         Product product = productService.findById(productId);
-        if(product == null){
+        if (product == null) {
             params.put("category", categoryService.findAll().get(0));
-        } else{
+        } else {
             params.put("category", categoryService.findById(product.getCategoryId()));
         }
         params.put("categories", categoryService.findAll());
         params.put("product", product);
-        params.put("title",  "Редактирование товара" );
+        params.put("title", "Редактирование товара");
 
         return new ModelAndView("admin/productEdit", params);
     }
 
     @RequestMapping(value = "admin/productAdd.html", method = RequestMethod.GET)
-    public ModelAndView addProduct(@RequestParam(value = "categoryId") long categoryId){
+    @Secured(value = "ROLE_ADMIN")
+    public ModelAndView addProduct(@RequestParam(value = "categoryId") long categoryId) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("categories", categoryService.findAll());
         params.put("category", categoryService.findById(categoryId));
-        params.put("title",  "Добавление товара" );
+        params.put("title", "Добавление товара");
 
         return new ModelAndView("admin/productAdd", params);
     }
@@ -182,35 +203,45 @@ public class ProductController {
     @RequestMapping(value = "admin/productList.html", method = RequestMethod.POST)
     @Secured(value = "ROLE_ADMIN")
     public ModelAndView saveProduct(@RequestParam(value = "id", required = false) Long id,
-                                     @RequestParam(value = "name", required = false) String name,
-                                     @RequestParam(value = "description", required = false) String description,
-                                     @RequestParam(value = "categoryId") Long categoryId){
-
-        Product product = productService.findById(id);
-        if(product == null){
+                                    @RequestParam(value = "name", required = false) String name,
+                                    @RequestParam(value = "description", required = false) String description,
+                                    @RequestParam(value = "categoryId") Long categoryId) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        Product product;
+        if (id != null) {
+            product = productService.findById(id);
+        } else {
             product = new Product();
         }
+        if (product != null) {
+            product.setName(name);
+            product.setDescription(description);
+            product.setCategoryId(categoryId);
 
-        product.setName(name);
-        product.setDescription(description);
-        product.setCategoryId(categoryId);
-
-        if(product.getId() == null){
-            productService.addProduct(product);
-        }else{
-            productService.updateProduct(product);
+            try {
+                if (product.getId() == null) {
+                    productService.addProduct(product);
+                } else {
+                    productService.updateProduct(product);
+                }
+                params.put("message", "Товар успешно сохранен");
+            } catch (Exception ex) {
+                logger.error(ex.getMessage(), ex);
+                params.put("message", "Произошла ошибка при сохранении товара");
+            }
+        } else {
+            params.put("message", "Товар не найден");
         }
-        Map<String, Object> params = new HashMap<String, Object>();
         params.put("category", categoryService.findById(categoryId));
         params.put("products", productService.findByCategory(categoryId));
-        params.put("title",  "Редактирование товаров в категории" );
-
+        params.put("title", "Редактирование товаров в категории");
         return new ModelAndView("admin/productList", params);
     }
 
 
-    @RequestMapping(value="/product",method = RequestMethod.GET)
-    public @ResponseBody
+    @RequestMapping(value = "/product", method = RequestMethod.GET)
+    public
+    @ResponseBody
     ProductDto getCategoryJSON(@RequestParam(value = "id") long id) {
 
         Product product = productService.findById(id);
@@ -224,7 +255,7 @@ public class ProductController {
         List<ProductVersion> versions = productVersionService.findByProduct(id);
         ProductVersionDto[] versionsDto = new ProductVersionDto[versions.size()];
         int i = 0;
-        for(ProductVersion v : versions){
+        for (ProductVersion v : versions) {
             ProductVersionDto dto = new ProductVersionDto();
             dto.setDescription(v.getDescription());
             dto.setId(v.getId());

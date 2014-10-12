@@ -75,29 +75,38 @@ public class CategoryController {
                                      @RequestParam(value = "description", required = false) String description,
                                      @RequestParam(value = "group", required = false) Integer group,
                                      @RequestParam(value = "order", required = false) Integer order){
-
-        Category cat = categoryService.findById(id);
-        if(cat == null){
+        Category cat = null;
+        Map<String, Object> params = new HashMap<String, Object>();
+        if(id != null){
+             cat = categoryService.findById(id);
+        }else{
             cat = new Category();
         }
+        if(cat != null){
+            cat.setName(name);
+            cat.setDescription(description);
+            if(order != null){
+                cat.setOrder(order);
+            }
+            if(group!= null){
+                cat.setGroup(group);
+            }
 
-        cat.setName(name);
-        cat.setDescription(description);
-        if(order != null){
-            cat.setOrder(order);
-        }
-        if(group!= null){
-            cat.setGroup(group);
-        }
-
-        if(cat.getId() == null){
-            categoryService.addCategory(cat);
+            try{
+            if(cat.getId() == null){
+                categoryService.addCategory(cat);
+            }else{
+                categoryService.updateCategory(cat);
+            }
+                params.put("message", "Успешно осхранено");
+            }catch (Exception ex){
+                logger.error(ex.getMessage(), ex);
+                params.put("message", "Произошла ошибка при сохранении категории");
+            }
         }else{
-            categoryService.updateCategory(cat);
+            params.put("message", "Категория не найдена");
         }
-        Map<String, Object> params = new HashMap<String, Object>();
         params.put("categories", categoryService.findAll());
-        params.put("message", "Успешно осхранено");
         params.put("title",  "Редактирование списка категорий");
 
         return new ModelAndView("admin/categoryList", params);

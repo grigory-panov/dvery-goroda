@@ -25,7 +25,7 @@ public class ProductService {
     private ProductDao productDao;
 
 
-    public Product findById(Long id){
+    public Product findById(long id){
         return productDao.findById(id);
     }
 

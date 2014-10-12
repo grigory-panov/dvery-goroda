@@ -33,7 +33,7 @@ public class InfoDao {
         return jdbcTemplate.query("select * from info where deleted = false order by date_add desc", new InfoMapper());
     }
 
-    public Info findById(Long id) {
+    public Info findById(long id) {
         String query = "select * from info where deleted = false and id = ?";
         try {
             return jdbcTemplate.queryForObject(query, new InfoMapper(), id);
@@ -42,7 +42,7 @@ public class InfoDao {
         }
     }
 
-    public Info findByIdWithDeleted(Long id) {
+    public Info findByIdWithDeleted(long id) {
         String query = "select * from info where id = ?";
         try {
             return jdbcTemplate.queryForObject(query, new InfoMapper(), id);

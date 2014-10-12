@@ -12,7 +12,6 @@
 
 <c:if test="${not empty categories}">
     <table class="table">
-
         <tr>
             <th><fmt:message key="table.id" bundle="${common}"/></th>
             <th><fmt:message key="table.name" bundle="${common}"/></th>
@@ -34,6 +33,9 @@
             </tr>
         </c:forEach>
     </table>
+</c:if>
+<c:if test="${empty categories}">
+    <p><fmt:message key="category.list.empty" bundle="${categoryMessage}"/></p>
 </c:if>
 </div>
 <%@ include file="/WEB-INF/jsp/admin/footer.jsp" %>

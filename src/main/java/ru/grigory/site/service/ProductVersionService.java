@@ -28,11 +28,11 @@ public class ProductVersionService {
         return productVersionDao.findByProduct(id);
     }
 
-    public ProductVersion findById(Long id) {
+    public ProductVersion findById(long id) {
         return productVersionDao.findById(id);
     }
 
-    public ProductVersion findFirstVersion(Long productId) {
+    public ProductVersion findFirstVersion(long productId) {
         return productVersionDao.findFirstVersion(productId);
     }
 
