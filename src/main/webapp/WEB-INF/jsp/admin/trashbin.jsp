@@ -1,6 +1,7 @@
 <%@ include file="/WEB-INF/jsp/admin/include.jsp" %>
 <%@ include file="/WEB-INF/jsp/admin/header.jsp" %>
 <fmt:setBundle basename="messages.info" var="info"/>
+<fmt:setBundle basename="messages.products" var="products"/>
 
 <div class="container">
 
@@ -31,6 +32,7 @@
             <th><fmt:message key="table.id" bundle="${common}"/></th>
             <th><fmt:message key="table.name" bundle="${common}"/></th>
             <th><fmt:message key="table.description" bundle="${common}"/></th>
+            <th><fmt:message key="product.category.name" bundle="${products}"/></th>
             <th><fmt:message key="table.dateAdd" bundle="${common}"/></th>
             <th><fmt:message key="table.dateDelete" bundle="${common}"/></th>
             <th><fmt:message key="table.restore" bundle="${common}"/></th>
@@ -56,6 +58,7 @@
             <th><fmt:message key="table.id" bundle="${common}"/></th>
             <th><fmt:message key="table.name" bundle="${common}"/></th>
             <th><fmt:message key="table.description" bundle="${common}"/></th>
+            <th><fmt:message key="product.name" bundle="${products}"/></th>
             <th><fmt:message key="table.dateAdd" bundle="${common}"/></th>
             <th><fmt:message key="table.dateDelete" bundle="${common}"/></th>
             <th><fmt:message key="table.restore" bundle="${common}"/></th>

@@ -72,7 +72,7 @@ public class InfoDao {
 
 
     public List<Info> findDeleted(){
-         return jdbcTemplate.query("select * from info where deleted = false", new InfoMapper());
+         return jdbcTemplate.query("select * from info where deleted = true", new InfoMapper());
     }
 
 }
