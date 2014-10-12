@@ -1,4 +1,5 @@
 dvery-goroda
 ============
 
-Web application for online doors showroom
+Java web application for online doors showroom.
+Created with Spring MVC and Spring Security.
