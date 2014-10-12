@@ -5,7 +5,7 @@
 <div class="container">
 
 <c:if test="${not empty message}">
-<p class="text-info">${message}</p>
+<p class="${messageClass}">${message}</p>
 </c:if>
 
 <a href='<c:url value="categoryAdd.html"/>'><th><fmt:message key="category.add.link" bundle="${categoryMessage}"/></th></a>

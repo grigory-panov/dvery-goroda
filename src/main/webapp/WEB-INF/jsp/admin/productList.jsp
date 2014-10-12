@@ -5,7 +5,7 @@
 <div class="container">
 
 <c:if test="${not empty message}">
-<p class="text-info">${message}</p>
+<p class="${messageClass}">${message}</p>
 </c:if>
 
 <h3><a href='<c:url value="categoryList.html"/>'>${category.name}</a></h3>

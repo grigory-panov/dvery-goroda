@@ -1,5 +1,6 @@
 package ru.grigory.site.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,14 @@ import ru.grigory.site.exception.BusinessException;
 import ru.grigory.site.service.CategoryService;
 import ru.grigory.site.service.ProductService;
 import ru.grigory.site.service.ProductVersionService;
+import ru.grigory.site.web.Utils;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PropertyResourceBundle;
 
 /**
  * Created with IntelliJ IDEA.
@@ -60,11 +63,17 @@ public class ProductController {
 
     @RequestMapping(value = "admin/productList.html", method = RequestMethod.GET)
     @Secured(value = "ROLE_ADMIN")
-    public ModelAndView getProductList(@RequestParam(value = "categoryId") long categoryId) {
+    public ModelAndView getProductList(@RequestParam(value = "categoryId") long categoryId,
+                                       @RequestParam(value = "message", required = false) String message) {
         Map<String, Object> params = new HashMap<String, Object>();
-//        params.put("categories", categoryService.findAll());
         params.put("category", categoryService.findById(categoryId));
         params.put("products", productService.findByCategory(categoryId));
+        String resolvedMesage = Utils.resolveMessage(message);
+        if(resolvedMesage != null){
+            params.put("message", resolvedMesage);
+            params.put("messageClass",message.startsWith("error.") ? "text-danger" : "text-info");
+        }
+
         params.put("title", "Редактирование товаров в категории");
 
         return new ModelAndView("admin/productList", params);
@@ -72,13 +81,18 @@ public class ProductController {
 
     @RequestMapping(value = "admin/productVersionList.html", method = RequestMethod.GET)
     @Secured(value = "ROLE_ADMIN")
-    public ModelAndView getProductVersionList(@RequestParam(value = "productId") long productId) {
+    public ModelAndView getProductVersionList(@RequestParam(value = "productId", required = true) long productId,
+                                              @RequestParam(value = "message", required = false) String message) {
         Map<String, Object> params = new HashMap<String, Object>();
         Product product = productService.findById(productId);
 
-//        params.put("categories", categoryService.findAll());
         params.put("category", categoryService.findById(product.getCategoryId()));
         params.put("product", product);
+        String resolvedMesage = Utils.resolveMessage(message);
+        if(resolvedMesage != null){
+            params.put("message", resolvedMesage);
+            params.put("messageClass",message.startsWith("error.") ? "text-danger" : "text-info");
+        }
         params.put("productVersions", productVersionService.findByProduct(productId));
         params.put("title", "Редактирование версий товара");
 
@@ -113,19 +127,18 @@ public class ProductController {
 
     @RequestMapping(value = "admin/productVersionList.html", method = RequestMethod.POST)
     @Secured(value = "ROLE_ADMIN")
-    public ModelAndView saveProductVersion(@RequestParam(value = "id", required = false) Long id,
-                                           @RequestParam(value = "name", required = true) String name,
-                                           @RequestParam(value = "description", required = false) String description,
-                                           @RequestParam(value = "productId", required = true) Long productId,
-                                           @RequestParam(value = "price", required = true) BigDecimal price,
-                                           @RequestParam(value = "order", required = true) Integer order,
-                                           @RequestParam(value = "size", required = true) String size,
-                                           @RequestParam(value = "img", required = false) MultipartFile file) {
+    public String saveProductVersion(@RequestParam(value = "id", required = false) Long id,
+                                     @RequestParam(value = "name", required = true) String name,
+                                     @RequestParam(value = "description", required = false) String description,
+                                     @RequestParam(value = "productId", required = true) Long productId,
+                                     @RequestParam(value = "price", required = true) BigDecimal price,
+                                     @RequestParam(value = "order", required = true) Integer order,
+                                     @RequestParam(value = "size", required = true) String size,
+                                     @RequestParam(value = "img", required = false) MultipartFile file) {
 
 
         ProductVersion productVersion = null;
-        Map<String, Object> params = new HashMap<String, Object>();
-
+        String code;
         if (id != null) {
             productVersion = productVersionService.findById(id);
         } else {
@@ -147,29 +160,23 @@ public class ProductController {
                 }
             } catch (Exception ex) {
                 logger.error(ex.getMessage(), ex);
-                params.put("message", "Версия продукта не сохранена из-за ошибки");
+                code = "error.database";
             }
-            params.put("message", "Версия продукта успешно сохранена");
+            code = "message.OK";
             if (!file.isEmpty()) {
                 try {
                     ImagesController.storeFile(file, productVersion.getId(), productId);
                 } catch (IOException ex) {
                     logger.error(ex.getMessage(), ex);
-                    params.put("message", "Версия продукта сохранена, но изображение нет");
+                    code = "error.productVersion.image";
                 }
             }
 
         } else {
-            params.put("message", "Не найдена версия продукта");
+            code = "error.productVersion.notfound";
         }
 
-        Product product = productService.findById(productId);
-        params.put("category", categoryService.findById(product.getCategoryId()));
-        params.put("product", product);
-        params.put("productVersions", productVersionService.findByProduct(productId));
-        params.put("title", "Редактирование версий товара");
-
-        return new ModelAndView("admin/productVersionList", params);
+        return "redirect:/admin/productVersionList.html?productId="+productId +"&message="+ code;
     }
 
     @RequestMapping(value = "admin/productEdit.html", method = RequestMethod.GET)
@@ -202,11 +209,11 @@ public class ProductController {
 
     @RequestMapping(value = "admin/productList.html", method = RequestMethod.POST)
     @Secured(value = "ROLE_ADMIN")
-    public ModelAndView saveProduct(@RequestParam(value = "id", required = false) Long id,
-                                    @RequestParam(value = "name", required = false) String name,
-                                    @RequestParam(value = "description", required = false) String description,
-                                    @RequestParam(value = "categoryId") Long categoryId) {
-        Map<String, Object> params = new HashMap<String, Object>();
+    public String saveProduct(@RequestParam(value = "id", required = false) Long id,
+                              @RequestParam(value = "name", required = false) String name,
+                              @RequestParam(value = "description", required = false) String description,
+                              @RequestParam(value = "categoryId") Long categoryId) {
+        String code;
         Product product;
         if (id != null) {
             product = productService.findById(id);
@@ -224,18 +231,15 @@ public class ProductController {
                 } else {
                     productService.updateProduct(product);
                 }
-                params.put("message", "Товар успешно сохранен");
+                code = "message.OK";
             } catch (Exception ex) {
                 logger.error(ex.getMessage(), ex);
-                params.put("message", "Произошла ошибка при сохранении товара");
+                code = "error.database";
             }
         } else {
-            params.put("message", "Товар не найден");
+            code = "error.product.notfound";
         }
-        params.put("category", categoryService.findById(categoryId));
-        params.put("products", productService.findByCategory(categoryId));
-        params.put("title", "Редактирование товаров в категории");
-        return new ModelAndView("admin/productList", params);
+        return "redirect:/admin/productList.html?categoryId=" + categoryId +"&message="+ code;
     }
 
 

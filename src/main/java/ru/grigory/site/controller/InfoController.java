@@ -1,5 +1,6 @@
 package ru.grigory.site.controller;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,12 @@ import ru.grigory.site.domain.Info;
 import ru.grigory.site.dto.InfoDto;
 import ru.grigory.site.service.CategoryService;
 import ru.grigory.site.service.InfoService;
+import ru.grigory.site.web.Utils;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.PropertyResourceBundle;
 
 /**
  * Created with IntelliJ IDEA.
@@ -47,9 +50,14 @@ public class InfoController {
     }
 
     @RequestMapping(value = "admin/infoList.html", method = RequestMethod.GET)
-    public ModelAndView getInfoList(){
+    public ModelAndView getInfoList(@RequestParam(value = "message", required = false) String message){
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("infos", infoService.findAll());
+        String resolvedMesage = Utils.resolveMessage(message);
+        if(resolvedMesage != null){
+            params.put("message", resolvedMesage);
+            params.put("messageClass",message.startsWith("error.") ? "text-danger" : "text-info");
+        }
         params.put("title",  "Список информационных статей");
 
         return new ModelAndView("admin/infoList", params);
@@ -57,10 +65,11 @@ public class InfoController {
     }
 
     @RequestMapping(value = "admin/infoList.html", method = RequestMethod.POST)
-    public ModelAndView gsaveInfo(@RequestParam(value = "id", required = false) Long id,
-                                  @RequestParam(value = "header", required = true) String header,
-                                  @RequestParam(value = "body", required = true) String body){
-        Map<String, Object> params = new HashMap<String, Object>();
+    public String gsaveInfo(@RequestParam(value = "id", required = false) Long id,
+                            @RequestParam(value = "header", required = true) String header,
+                            @RequestParam(value = "body", required = true) String body){
+
+        String code;
         Info info = null;
         if(id ==null){
              info = infoService.findById(id);
@@ -77,18 +86,14 @@ public class InfoController {
                 }else{
                     infoService.updateInfo(info);
                 }
-                params.put("message", "Успешно сохранено");
+                code ="message.OK";
             }catch (Exception ex){
-                params.put("message", "Произошла ошибка при сохранении статьи");
+                code="error.database";
             }
         }else{
-            params.put("message", "Статья не найдена");
+            code="error.info.notfound";
         }
-
-        params.put("infos", infoService.findAll());
-        params.put("title",  "Список информационных статей");
-
-        return new ModelAndView("admin/infoList", params);
+        return "redirect:/admin/infoList.html?message="+ code;
     }
 
 
@@ -154,4 +159,5 @@ public class InfoController {
         result.setNextId(nextId);
         return result;
     }
+
 }
