@@ -21,7 +21,7 @@
             <th><fmt:message key="version.price.name" bundle="${productMessages}"/></th>
             <th><fmt:message key="version.size.name" bundle="${productMessages}"/></th>
             <th><fmt:message key="version.order.name" bundle="${productMessages}"/></th>
-            <th><fmt:message key="version.image.name" bundle="${productMessages}"/></th>
+            <th><fmt:message key="version.file.name" bundle="${productMessages}"/></th>
             <th><fmt:message key="table.delete" bundle="${common}"/></th>
         </tr>
         <c:forEach var="o" items="${productVersions}">
@@ -32,7 +32,12 @@
                 <td>${o.price}</td>
                 <td>${o.size}</td>
                 <td>${o.order}</td>
-                <td><a href='<c:url value="/image/thumbnail/${o.productId}/${o.id}"/>'>image<a></td>
+                <td>
+                    <a href='<c:url value="/image/version/${o.productId}/${o.id}"/>'>
+                        <img src='<c:url value="/image/thumbnail/${o.productId}/${o.id}"/>'
+                        class="img-thumbnail" alt="X">
+                    <a>
+                </td>
                 <td><a href='<c:url value="/action/delete/productVersion/${o.id}"/>' class="delete"><span class="glyphicon glyphicon-trash"></span></a></td>
             </tr>
         </c:forEach>

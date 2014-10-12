@@ -126,7 +126,7 @@ public class ProductController {
         ProductVersion productVersion = null;
         Map<String, Object> params = new HashMap<String, Object>();
 
-        if (id == null) {
+        if (id != null) {
             productVersion = productVersionService.findById(id);
         } else {
             productVersion = new ProductVersion();
@@ -147,7 +147,7 @@ public class ProductController {
                 }
             } catch (Exception ex) {
                 logger.error(ex.getMessage(), ex);
-                params.put("message", "Версия продукта не сохраненв из-за ошибки");
+                params.put("message", "Версия продукта не сохранена из-за ошибки");
             }
             params.put("message", "Версия продукта успешно сохранена");
             if (!file.isEmpty()) {
@@ -155,7 +155,7 @@ public class ProductController {
                     ImagesController.storeFile(file, productVersion.getId(), productId);
                 } catch (IOException ex) {
                     logger.error(ex.getMessage(), ex);
-                    params.put("message", "Версия продукта сохраненв  но изображение нет");
+                    params.put("message", "Версия продукта сохранена, но изображение нет");
                 }
             }
 

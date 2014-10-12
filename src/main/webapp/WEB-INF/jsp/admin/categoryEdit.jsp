@@ -7,7 +7,7 @@
 <c:if test="${not empty category}">
     <input name="id" type="hidden" value="${category.id}">
     <div class="form-group">
-         <label for="header" class="col-sm-2 control-label"><fmt:message key="table.name" bundle="${common}"/></label>
+         <label for="name" class="col-sm-2 control-label"><fmt:message key="table.name" bundle="${common}"/></label>
          <div class="col-xs-5">
             <input type="text" class="form-control" value="${category.name}" id="name" name="name" autofocus required
              placeholder='<fmt:message key="category.name.placeholder" bundle="${categoryMessage}"/>' tabindex="1">

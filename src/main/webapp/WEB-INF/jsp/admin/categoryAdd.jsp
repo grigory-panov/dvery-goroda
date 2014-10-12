@@ -5,7 +5,7 @@
 <div class="container">
 <form action="<c:url value='categoryList.html'/>" class="form-horizontal"  method="POST" role="form">
     <div class="form-group">
-         <label for="header" class="col-sm-2 control-label"><fmt:message key="table.name" bundle="${common}"/></label>
+         <label for="bame" class="col-sm-2 control-label"><fmt:message key="table.name" bundle="${common}"/></label>
          <div class="col-xs-5">
             <input type="text" class="form-control"  id="name" name="name" autofocus required
              placeholder='<fmt:message key="category.name.placeholder" bundle="${categoryMessage}"/>' tabindex="1">
