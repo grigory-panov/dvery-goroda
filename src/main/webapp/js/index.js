@@ -66,7 +66,6 @@ function loadPage(pageNumber){
                 caption.appendTo(thumbnail);
                 $("<h3/>").text(json.product[i].name).appendTo(caption);
                 $("<p>").text(json.product[i].description).appendTo(caption);
-                $("<p>").text("Цена: " + json.product[i].price +" руб.").appendTo(caption);
                 $("<p><a href=\"product.html?id="+ json.product[i].id + " \" class=\"btn btn-primary\" role=\"button\">Подробнее</a></p>").appendTo(caption);
                 thumbnail.appendTo(wrapper);
                 $(".row").last().append(wrapper);

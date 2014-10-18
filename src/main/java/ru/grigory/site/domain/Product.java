@@ -16,7 +16,6 @@ public class Product implements Serializable {
     private Long id;
     private String name;
     private String description;
-    private BigDecimal price;
     private Long categoryId;
     private boolean deleted;
     private Date dateAdd;
@@ -79,13 +78,6 @@ public class Product implements Serializable {
         this.description = description;
     }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
 
     public Long getCategoryId() {
         return categoryId;

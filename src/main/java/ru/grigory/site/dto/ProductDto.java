@@ -14,7 +14,6 @@ public class ProductDto implements Serializable {
     private long id;
     private String name;
     private String description;
-    private BigDecimal price;
     private ProductVersionDto[] versions;
 
     public ProductVersionDto[] getVersions() {
@@ -50,11 +49,4 @@ public class ProductDto implements Serializable {
         this.description = description;
     }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
-
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
 }

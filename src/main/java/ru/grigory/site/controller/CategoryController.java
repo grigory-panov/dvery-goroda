@@ -163,7 +163,6 @@ public class CategoryController {
             dto.setDescription(product.getDescription());
             dto.setId(product.getId());
             dto.setName(product.getName());
-            dto.setPrice(product.getPrice());
             productsDto[i] = dto;
             i++;
         }
