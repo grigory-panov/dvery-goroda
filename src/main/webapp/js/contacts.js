@@ -8,10 +8,10 @@ function init () {
         click: function () {
             if (!myMap) {
                 myMap = new ymaps.Map('map', {
-                    center: [56.61836962, 47.83551537], // Йошкар-Ола
+                    center: [contacts_lat, contacts_lng], // Йошкар-Ола
                     zoom: 13
                 });
-                myPlacemark = new ymaps.Placemark([ 56.619331, 47.836851], {
+                myPlacemark = new ymaps.Placemark([contacts_lat, contacts_lng], {
                     // Чтобы балун и хинт открывались на метке, необходимо задать ей определенные свойства.
                     hintContent: "Мы находимся здесь"
                 });

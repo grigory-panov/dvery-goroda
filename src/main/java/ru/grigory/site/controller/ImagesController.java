@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import ru.grigory.site.domain.ProductVersion;
 import ru.grigory.site.service.ProductVersionService;
+import ru.grigory.site.service.SettingsService;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -27,16 +28,23 @@ import java.io.*;
 @Controller
 public class ImagesController {
 
-    private final static String dir = "/usr/local/image";
+//    private final static String dir = "/usr/local/image";
 
     @Autowired
     private ProductVersionService productVersionService;
+
+    @Autowired
+    private SettingsService settingsService;
+
+    private String getStorageDir(){
+        return settingsService.findByKey("storage_dir").getValue();
+    }
 
 
     @ResponseBody
     @RequestMapping(value = "/thumbnail/{productId}/{versionId}", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
     public byte[] getImgThumb(@PathVariable Long productId, @PathVariable Long versionId) throws IOException {
-        File f = new File(dir, productId + "_" + versionId +"_thumb.png");
+        File f = new File(getStorageDir(), productId + "_" + versionId +"_thumb.png");
         if(!f.exists()){
             return null;
         }else{
@@ -48,7 +56,7 @@ public class ImagesController {
     @ResponseBody
     @RequestMapping(value = "/version/{productId}/{versionId}", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
     public byte[] getImgVersion(@PathVariable Long productId, @PathVariable Long versionId) throws IOException {
-        File f = new File(dir, productId + "_" + versionId + ".png");
+        File f = new File(getStorageDir(), productId + "_" + versionId + ".png");
         if(!f.exists()){
             return null;
         }else{
@@ -65,7 +73,7 @@ public class ImagesController {
         if(firstVersion == null){
             return null;
         }
-        File f = new File(dir, productId + "_" + firstVersion.getId() + "_thumb.png");
+        File f = new File(getStorageDir(), productId + "_" + firstVersion.getId() + "_thumb.png");
         if(!f.exists()){
             return null;
         }else{
@@ -75,9 +83,4 @@ public class ImagesController {
     }
 
 
-    public static void storeFile(MultipartFile file, Long productVersionId, Long productId) throws IOException {
-        BufferedImage image = ImageIO.read(file.getInputStream());
-        ImageIO.write(Scalr.resize(image, 800), "png", new File(dir, productId + "_" + productVersionId + ".png"));
-        ImageIO.write(Scalr.resize(image, 200), "png",  new File(dir, productId + "_" + productVersionId + "_thumb.png"));
-    }
 }

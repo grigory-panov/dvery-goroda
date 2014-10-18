@@ -14,6 +14,7 @@ import ru.grigory.site.dto.FeedbackDto;
 import ru.grigory.site.dto.FeedbackListDto;
 import ru.grigory.site.service.CategoryService;
 import ru.grigory.site.service.FeedbackService;
+import ru.grigory.site.service.SettingsService;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -38,12 +39,16 @@ public class FeedbackController {
     @Autowired
     private FeedbackService feedbackService;
 
+    @Autowired
+    private SettingsService settingsService;
+
 
     @RequestMapping(value = "feedback.html", method = RequestMethod.GET)
     public ModelAndView getFeedbacks(){
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("categories", categoryService.findAll());
-        params.put("title",  "Двери города - отзывы покупателей");
+        params.put("global", settingsService.findAllAsMap());
+        params.put("title",  "Отзывы покупателей");
 
         return new ModelAndView("feedback", params);
     }

@@ -16,6 +16,7 @@ import ru.grigory.site.domain.Info;
 import ru.grigory.site.dto.InfoDto;
 import ru.grigory.site.service.CategoryService;
 import ru.grigory.site.service.InfoService;
+import ru.grigory.site.service.SettingsService;
 import ru.grigory.site.web.Utils;
 
 import java.util.HashMap;
@@ -38,13 +39,16 @@ public class InfoController {
     private CategoryService categoryService;
     @Autowired
     private InfoService infoService;
+    @Autowired
+    private SettingsService settingsService;
 
 
     @RequestMapping(value = "info.html", method = RequestMethod.GET)
     public ModelAndView getCategory(){
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("categories", categoryService.findAll());
-        params.put("title",  "Двери города - информация");
+        params.put("global", settingsService.findAllAsMap());
+        params.put("title",  "Информация");
 
         return new ModelAndView("info", params);
     }
@@ -53,6 +57,7 @@ public class InfoController {
     public ModelAndView getInfoList(@RequestParam(value = "message", required = false) String message){
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("infos", infoService.findAll());
+        params.put("global", settingsService.findAllAsMap());
         String resolvedMesage = Utils.resolveMessage(message);
         if(resolvedMesage != null){
             params.put("message", resolvedMesage);
@@ -101,6 +106,7 @@ public class InfoController {
     public ModelAndView editInfo(@RequestParam(value = "id", required = true) Long id){
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("infoMessage", infoService.findById(id));
+        params.put("global", settingsService.findAllAsMap());
         params.put("title",  "Редактирование информации");
 
         return new ModelAndView("admin/infoEdit", params);
@@ -109,6 +115,7 @@ public class InfoController {
     @RequestMapping(value = "admin/infoAdd.html", method = RequestMethod.GET)
     public ModelAndView addInfo(){
         Map<String, Object> params = new HashMap<String, Object>();
+        params.put("global", settingsService.findAllAsMap());
         params.put("title",  "Добавление информации");
 
         return new ModelAndView("admin/infoAdd", params);

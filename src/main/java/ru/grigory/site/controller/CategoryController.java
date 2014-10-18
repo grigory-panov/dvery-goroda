@@ -16,6 +16,7 @@ import ru.grigory.site.dto.ProductDto;
 import ru.grigory.site.dto.ProductListDto;
 import ru.grigory.site.service.CategoryService;
 import ru.grigory.site.service.ProductService;
+import ru.grigory.site.service.SettingsService;
 import ru.grigory.site.web.Utils;
 
 import java.io.UnsupportedEncodingException;
@@ -33,7 +34,7 @@ import java.util.*;
 public class CategoryController {
     private final static Logger logger = LoggerFactory.getLogger(CategoryController.class);
 
-    private final static int RECORDS_PER_PAGE = 6;
+//    private final static int RECORDS_PER_PAGE = 6;
 
     @Autowired
     private CategoryService categoryService;
@@ -42,13 +43,17 @@ public class CategoryController {
     private ProductService productService;
 
     @Autowired
+    private SettingsService settingsService;
+
+    @Autowired
     MessageSource messageSource;
 
     @RequestMapping(value = "index.html", method = RequestMethod.GET)
     public ModelAndView getHome() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("categories", categoryService.findAll());
-        params.put("title", "Двери города - список товаров");
+        params.put("global", settingsService.findAllAsMap());
+        params.put("title", "Cписок товаров");
 
         return new ModelAndView("index", params);
     }
@@ -65,6 +70,7 @@ public class CategoryController {
     public ModelAndView getCategoryList(@RequestParam(value = "message", required = false) String message) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("categories", categoryService.findAll());
+        params.put("global", settingsService.findAllAsMap());
         String resolvedMesage = Utils.resolveMessage(message);
         if(resolvedMesage != null){
             params.put("message", resolvedMesage);
@@ -121,6 +127,7 @@ public class CategoryController {
     public ModelAndView editCategory(@RequestParam(value = "id") Long categoryId) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("category", categoryService.findById(categoryId));
+        params.put("global", settingsService.findAllAsMap());
         params.put("title", "Редактирование категории");
         return new ModelAndView("admin/categoryEdit", params);
     }
@@ -130,6 +137,7 @@ public class CategoryController {
     public ModelAndView addCategory() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("title", "Добавление категории");
+        params.put("global", settingsService.findAllAsMap());
         return new ModelAndView("admin/categoryAdd", params);
     }
 
@@ -146,6 +154,7 @@ public class CategoryController {
         //todo: ошибки должны быть оработаны и возвращены в теге errorText
         Category category = categoryService.findById(id);
         ProductListDto result = new ProductListDto();
+        Integer RECORDS_PER_PAGE = Integer.valueOf(settingsService.findByKey("products_per_page").getValue());
         List<Product> products = productService.getPageByCategoryID(id, (page - 1) * RECORDS_PER_PAGE, page * RECORDS_PER_PAGE);
         ProductDto[] productsDto = new ProductDto[products.size()];
         int i = 0;

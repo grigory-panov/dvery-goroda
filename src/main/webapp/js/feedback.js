@@ -66,8 +66,7 @@ function loadFeedbackPage(page){
 
         success: function( json ) {
             console.log( "json ok!" );
-            var recPerPage = 5;
-            var pageCount = Math.ceil(json.count/recPerPage);
+            var pageCount = Math.ceil(json.count/FEEDBACK_PER_PAGE);
             var converter = new Showdown.converter();
             $("#content").empty();
             $("#content").hide();

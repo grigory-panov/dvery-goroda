@@ -18,12 +18,11 @@ function loadPage(pageNumber){
             "page" : pageNumber
         },
         success: function( json ) {
-            var recPerPage = 6;
             console.log( "json ok!" );
             $("h2").text(json.category);
             $(".lead").text(json.description);
             $("#products").empty();
-            var pageCount = json.count/recPerPage;
+            var pageCount = json.count/RECORD_PER_PAGE;
             pageCount = Math.ceil(pageCount);
             if(pageCount == 0){
                 $("<p>").text("В данной категории пока нет товаров").appendTo("#products");

@@ -8,6 +8,7 @@ import org.springframework.web.servlet.ModelAndView;
 import ru.grigory.site.service.CategoryService;
 import ru.grigory.site.service.ProductService;
 import ru.grigory.site.service.ProductVersionService;
+import ru.grigory.site.service.SettingsService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,12 +26,17 @@ public class ContactsController {
     @Autowired
     private CategoryService categoryService;
 
+    @Autowired
+    private SettingsService settingsService;
+
+
 
     @RequestMapping(value = "contacts.html", method = RequestMethod.GET)
     public ModelAndView getProduct(){
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("categories", categoryService.findAll());
-        params.put("title",  "Двери города - контакты");
+        params.put("global", settingsService.findAllAsMap());
+        params.put("title",  "Контакты");
 
         return new ModelAndView("contacts", params);
     }

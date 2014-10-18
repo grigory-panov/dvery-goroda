@@ -3,8 +3,8 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="">
-    <meta name="author" content="Grigory Panov grigory.panov at gmail.com">
+    <meta name="description" content="${global.description}">
+    <meta name="author" content="${global.author}">
     <link rel="icon" href='<c:url value="icons/favicon.ico"/>'>
 
     <title>${title}</title>
@@ -29,7 +29,7 @@
                 <span class="icon-bar"></span>
                 <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href='<c:url value="index.html"/>'><fmt:message key="project.name" bundle="${common}"/></a>
+            <a class="navbar-brand" href='<c:url value="index.html"/>'>${global.project_name}</a>
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">

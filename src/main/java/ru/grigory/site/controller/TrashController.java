@@ -6,10 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-import ru.grigory.site.service.CategoryService;
-import ru.grigory.site.service.InfoService;
-import ru.grigory.site.service.ProductService;
-import ru.grigory.site.service.ProductVersionService;
+import ru.grigory.site.service.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -36,13 +33,15 @@ public class TrashController {
     @Autowired
     private InfoService infoService;
 
-
+    @Autowired
+    private SettingsService settingsService;
 
 
     @RequestMapping(value = "admin/trashbin.html", method = RequestMethod.GET)
     @Secured(value = "ROLE_ADMIN")
     public ModelAndView getTrashBin(){
         Map<String, Object> params = new HashMap<String, Object>();
+        params.put("global", settingsService.findAllAsMap());
         params.put("categoriesTrash", categoryService.findDeleted());
         params.put("productsTrash", productService.findDeleted());
         params.put("versionsTrash", productVersionService.findDeleted());

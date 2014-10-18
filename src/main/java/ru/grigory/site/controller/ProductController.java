@@ -1,6 +1,7 @@
 package ru.grigory.site.controller;
 
 import org.apache.commons.lang.StringUtils;
+import org.imgscalr.Scalr;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,12 @@ import ru.grigory.site.exception.BusinessException;
 import ru.grigory.site.service.CategoryService;
 import ru.grigory.site.service.ProductService;
 import ru.grigory.site.service.ProductVersionService;
+import ru.grigory.site.service.SettingsService;
 import ru.grigory.site.web.Utils;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.HashMap;
@@ -51,12 +56,20 @@ public class ProductController {
     @Autowired
     private ProductVersionService productVersionService;
 
+    @Autowired
+    private SettingsService settingsService;
+
+    private String getStorageDir(){
+        return settingsService.findByKey("storage_dir").getValue();
+    }
+
 
     @RequestMapping(value = "product.html", method = RequestMethod.GET)
     public ModelAndView getProduct() {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("categories", categoryService.findAll());
-        params.put("title", "Двери города - описание товара");
+        params.put("global", settingsService.findAllAsMap());
+        params.put("title", "Описание товара");
 
         return new ModelAndView("product", params);
     }
@@ -68,6 +81,7 @@ public class ProductController {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("category", categoryService.findById(categoryId));
         params.put("products", productService.findByCategory(categoryId));
+        params.put("global", settingsService.findAllAsMap());
         String resolvedMesage = Utils.resolveMessage(message);
         if(resolvedMesage != null){
             params.put("message", resolvedMesage);
@@ -87,6 +101,7 @@ public class ProductController {
         Product product = productService.findById(productId);
 
         params.put("category", categoryService.findById(product.getCategoryId()));
+        params.put("global", settingsService.findAllAsMap());
         params.put("product", product);
         String resolvedMesage = Utils.resolveMessage(message);
         if(resolvedMesage != null){
@@ -109,6 +124,7 @@ public class ProductController {
         }
         Product product = productService.findById(productVersion.getProductId());
         params.put("productVersion", productVersionService.findById(id));
+        params.put("global", settingsService.findAllAsMap());
         params.put("product", product);
         params.put("title", "Редактирование версии");
 
@@ -120,6 +136,7 @@ public class ProductController {
     public ModelAndView addProductVersion(@RequestParam(value = "productId") long productId) {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("product", productService.findById(productId));
+        params.put("global", settingsService.findAllAsMap());
         params.put("title", "Добавление версии");
 
         return new ModelAndView("admin/productVersionAdd", params);
@@ -165,7 +182,7 @@ public class ProductController {
             code = "message.OK";
             if (!file.isEmpty()) {
                 try {
-                    ImagesController.storeFile(file, productVersion.getId(), productId);
+                    storeFile(file, productVersion.getId(), productId);
                 } catch (IOException ex) {
                     logger.error(ex.getMessage(), ex);
                     code = "error.productVersion.image";
@@ -190,6 +207,7 @@ public class ProductController {
             params.put("category", categoryService.findById(product.getCategoryId()));
         }
         params.put("categories", categoryService.findAll());
+        params.put("global", settingsService.findAllAsMap());
         params.put("product", product);
         params.put("title", "Редактирование товара");
 
@@ -202,6 +220,7 @@ public class ProductController {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("categories", categoryService.findAll());
         params.put("category", categoryService.findById(categoryId));
+        params.put("global", settingsService.findAllAsMap());
         params.put("title", "Добавление товара");
 
         return new ModelAndView("admin/productAdd", params);
@@ -272,4 +291,11 @@ public class ProductController {
         return result;
     }
 
+
+
+    private void storeFile(MultipartFile file, Long productVersionId, Long productId) throws IOException {
+        BufferedImage image = ImageIO.read(file.getInputStream());
+        ImageIO.write(Scalr.resize(image, 800), "png", new File(getStorageDir(), productId + "_" + productVersionId + ".png"));
+        ImageIO.write(Scalr.resize(image, 200), "png",  new File(getStorageDir(), productId + "_" + productVersionId + "_thumb.png"));
+    }
 }

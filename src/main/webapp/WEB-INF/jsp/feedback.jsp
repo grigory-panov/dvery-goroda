@@ -1,5 +1,10 @@
 <%@ include file="/WEB-INF/jsp/include.jsp" %>
 <%@ include file="/WEB-INF/jsp/header.jsp" %>
+
+<script language="javascript">
+    var FEEDBACK_PER_PAGE = ${global.feedbacks_per_page};
+</script>
+
 <fmt:setBundle basename="messages.feedback" var="feedback"/>
 <div class="container" id="container">
     <div class="bg-warning loading"><fmt:message key="loading.label" bundle="${common}"/></div>
