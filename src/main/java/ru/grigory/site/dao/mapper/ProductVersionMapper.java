@@ -25,9 +25,9 @@ public class ProductVersionMapper implements RowMapper<ProductVersion> {
         productVersion.setDescription(resultSet.getString("description"));
         productVersion.setName(resultSet.getString("name"));
         productVersion.setPrice(resultSet.getBigDecimal("price"));
-        productVersion.setDateAdd(resultSet.getDate("date_add"));
-        productVersion.setDateDelete(resultSet.getDate("date_delete"));
-        productVersion.setDateUpdate(resultSet.getDate("date_update"));
+        productVersion.setDateAdd(resultSet.getTimestamp("date_add"));
+        productVersion.setDateDelete(resultSet.getTimestamp("date_delete"));
+        productVersion.setDateUpdate(resultSet.getTimestamp("date_update"));
 
         return productVersion;
     }

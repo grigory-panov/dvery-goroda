@@ -30,18 +30,33 @@ public class FeedbackService {
 
     @Transactional(readOnly = false)
     public void deleteFeedback(Feedback feedback){
-
+        feedbackDao.delete(feedback.getId());
     }
 
-    public void findById(Long id){
-
+    @Transactional(readOnly = false)
+    public void approveFeedback(Feedback feedback){
+        feedbackDao.approve(feedback.getId());
     }
+
+
+    public int countApproved(){
+         return feedbackDao.countApproved();
+    }
+
+    public List<Feedback> getPageApproved(int from, int to){
+        return feedbackDao.getPageApproved(from, to);
+    }
+
 
     public int count(){
-         return feedbackDao.count();
+        return feedbackDao.count();
     }
 
     public List<Feedback> getPage(int from, int to){
         return feedbackDao.getPage(from, to);
+    }
+
+    public Feedback findById(long id) {
+        return feedbackDao.findByIdWithDeleted(id);
     }
 }

@@ -20,5 +20,28 @@ $( document ).ready(function() {
          });
 
      });
+     $(".approve").click(function(event){
+              event.preventDefault();
+              var delURL = $(this).prop("href");
+              var tr = $(this).closest('tr');
+              var td = $(this).parent();
+              $.ajax({
+                      url: delURL,
+                      type: "POST",
+                      dataType : "json",
+                      success: function( json ) {
+                         if(json.error === 'OK'){
+                             tr.addClass("success");
+                             td.empty();
+                         }else{
+                             alert(json.error);
+                         }
+                      },
+                      error: function() {
+                         alert('error!');
+                      }
+              });
+
+     });
 
 });

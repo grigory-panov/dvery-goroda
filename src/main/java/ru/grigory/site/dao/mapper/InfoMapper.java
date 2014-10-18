@@ -20,7 +20,7 @@ public class InfoMapper implements RowMapper<Info> {
         info.setId(resultSet.getLong("id"));
         info.setHeader(resultSet.getString("header"));
         info.setBody(resultSet.getString("body"));
-        info.setDateAdd(resultSet.getDate("date_add"));
+        info.setDateAdd(resultSet.getTimestamp("date_add"));
         info.setDeleted(resultSet.getBoolean("deleted"));
         return info;
     }

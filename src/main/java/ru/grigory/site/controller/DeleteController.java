@@ -4,16 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import ru.grigory.site.domain.Category;
-import ru.grigory.site.domain.Info;
-import ru.grigory.site.domain.Product;
-import ru.grigory.site.domain.ProductVersion;
+import ru.grigory.site.domain.*;
 import ru.grigory.site.dto.DeleteResult;
 import ru.grigory.site.dto.ProductDto;
-import ru.grigory.site.service.CategoryService;
-import ru.grigory.site.service.InfoService;
-import ru.grigory.site.service.ProductService;
-import ru.grigory.site.service.ProductVersionService;
+import ru.grigory.site.service.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -36,6 +30,9 @@ public class DeleteController {
 
     @Autowired
     private ProductVersionService productVersionService;
+
+    @Autowired
+    private FeedbackService feedbackService;
 
     @RequestMapping(value="/delete/category/{id}",method = RequestMethod.DELETE)
     @Secured(value = "ROLE_ADMIN")
@@ -239,6 +236,62 @@ public class DeleteController {
             infoService.restoreInfo(info);
         }catch (Exception ex){
             result.setError("Произошла ошибка при восстановлении");
+            return result;
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/delete/feedback/{id}",method = RequestMethod.DELETE)
+    @Secured(value = "ROLE_ADMIN")
+    public @ResponseBody
+    DeleteResult deleteFeebackJSON(@PathVariable(value = "id") long id) {
+
+        Feedback feedback = feedbackService.findById(id);
+        DeleteResult result = new DeleteResult();
+        result.setError("OK");
+
+        if(feedback == null){
+            result.setError("Не найден лтзыв для удаления");
+            return result;
+        }
+        if(feedback.isDeleted()){
+            result.setError("Отзыв уже был удален");
+            return result;
+        }
+        try{
+            feedbackService.deleteFeedback(feedback);
+        }catch (Exception ex){
+            result.setError("Произошла ошибка при удалении");
+            return result;
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/approve/feedback/{id}",method = RequestMethod.POST)
+    @Secured(value = "ROLE_ADMIN")
+    public @ResponseBody
+    DeleteResult approveeFeebackJSON(@PathVariable(value = "id") long id) {
+
+        Feedback feedback = feedbackService.findById(id);
+        DeleteResult result = new DeleteResult();
+        result.setError("OK");
+
+        if(feedback == null){
+            result.setError("Не найден отзыв");
+            return result;
+        }
+        if(feedback.isDeleted()){
+            result.setError("Отзыв уже был удален");
+            return result;
+        }
+        if(feedback.isApproved()){
+            result.setError("Отзыв уже был опубликован");
+            return result;
+        }
+        try{
+            feedbackService.approveFeedback(feedback);
+        }catch (Exception ex){
+            result.setError("Произошла ошибка при одобрении отзыва");
             return result;
         }
         return result;

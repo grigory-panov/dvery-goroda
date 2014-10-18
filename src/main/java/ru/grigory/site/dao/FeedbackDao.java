@@ -1,8 +1,12 @@
 package ru.grigory.site.dao;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+import ru.grigory.site.dao.mapper.FeedbackMapper;
 import ru.grigory.site.domain.Feedback;
 
+import javax.sql.DataSource;
 import java.util.*;
 
 /**
@@ -15,102 +19,45 @@ import java.util.*;
 @Repository
 public class FeedbackDao {
 
-    private static Map<Long, Feedback> map = new TreeMap<Long, Feedback>();
-    private static Long uid = 7L;
-    static {
-        {
-            Long id = 1L;
-            Feedback fb = new Feedback();
-            fb.setId(id);
-            fb.setApproved(true);
-            fb.setAuthor("Вася");
-            fb.setDateAdd(new Date());
-            fb.setDeleted(false);
-            fb.setIp("192.168.0.1");
-            fb.setText("Привет, это тестовое сообщение");
-            map.put(id, fb);
-        }
-        {
-            Long id = 2L;
-            Feedback fb = new Feedback();
-            fb.setId(id);
-            fb.setApproved(true);
-            fb.setAuthor("Вася");
-            fb.setDateAdd(new Date());
-            fb.setDeleted(false);
-            fb.setIp("192.168.0.1");
-            fb.setText("Привет, это тестовое сообщение");
-            map.put(id, fb);
-        }
-        {
-            Long id = 3L;
-            Feedback fb = new Feedback();
-            fb.setId(id);
-            fb.setApproved(true);
-            fb.setAuthor("Вася");
-            fb.setDateAdd(new Date());
-            fb.setDeleted(false);
-            fb.setIp("192.168.0.1");
-            fb.setText("Привет, это тестовое сообщение");
-            map.put(id, fb);
-        }
-        {
-            Long id = 4L;
-            Feedback fb = new Feedback();
-            fb.setId(id);
-            fb.setApproved(true);
-            fb.setAuthor("Вася");
-            fb.setDateAdd(new Date());
-            fb.setDeleted(false);
-            fb.setIp("192.168.0.1");
-            fb.setText("Привет, это тестовое сообщение");
-            map.put(id, fb);
-        }
-        {
-            Long id = 5L;
-            Feedback fb = new Feedback();
-            fb.setId(id);
-            fb.setApproved(true);
-            fb.setAuthor("Вася");
-            fb.setDateAdd(new Date());
-            fb.setDeleted(false);
-            fb.setIp("192.168.0.1");
-            fb.setText("Привет, это тестовое сообщение");
-            map.put(id, fb);
-        }
-        {
-            Long id = 6L;
-            Feedback fb = new Feedback();
-            fb.setId(id);
-            fb.setApproved(true);
-            fb.setAuthor("Вася");
-            fb.setDateAdd(new Date());
-            fb.setDeleted(false);
-            fb.setIp("192.168.0.1");
-            fb.setText("Привет, это тестовое сообщение");
-            map.put(id, fb);
-        }
+    private JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    public void setDataSource(DataSource dataSource) {
+        this.jdbcTemplate = new JdbcTemplate(dataSource);
+    }
+
+    public int countApproved() {
+        return jdbcTemplate.queryForObject("select count (*) from feedback where approved=true and deleted=false", Integer.class);
+    }
+
+    public List<Feedback> getPageApproved(int from, int to) {
+        return jdbcTemplate.query("select * from feedback where approved=true and deleted = false order by date_add desc offset ? limit ?", new FeedbackMapper(), from, to);
     }
 
     public int count() {
-        return map.keySet().size();
+        return jdbcTemplate.queryForObject("select count (*) from feedback where deleted = false", Integer.class);
     }
 
     public List<Feedback> getPage(int from, int to) {
-        List<Feedback> result = new ArrayList<Feedback>();
-        int i = 0;
-        for(Feedback fb : map.values()){
-             if(i>=from && i<to){
-                  result.add(fb);
-             }
-            i++;
-        }
-        return result;
+        return jdbcTemplate.query("select * from feedback where deleted=false order by date_add desc offset ? limit ?", new FeedbackMapper(), from, to);
     }
 
+
     public void addFeedback(Feedback fb) {
-        fb.setId(uid++);
-        map.put(fb.getId(), fb);
+        jdbcTemplate.update("insert into feedback (author, date_add, text, ip, country, city) values(?, now(), ?, ?, ?,?)",
+                fb.getAuthor(), fb.getText(), fb.getIp(), fb.getCountry(), fb.getCity());
+    }
+
+    public void approve(Long id){
+        jdbcTemplate.update("update feedback set approved = true, date_approve=now() where id=?", id);
+    }
+
+    public void delete(Long id){
+        jdbcTemplate.update("update feedback set deleted = true, date_delete=now() where id=?", id);
+    }
+
+
+    public Feedback findByIdWithDeleted(long id) {
+        return jdbcTemplate.queryForObject("select * from feedback where id=?", new FeedbackMapper(), id);
     }
 }

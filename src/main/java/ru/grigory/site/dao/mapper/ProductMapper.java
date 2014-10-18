@@ -23,9 +23,9 @@ public class ProductMapper implements RowMapper<Product> {
         product.setName(resultSet.getString("name"));
         product.setDescription(resultSet.getString("description"));
         product.setCategoryId(resultSet.getLong("category_id"));
-        product.setDateAdd(resultSet.getDate("date_add"));
-        product.setDateDelete(resultSet.getDate("date_delete"));
-        product.setDateUpdate(resultSet.getDate("date_update"));
+        product.setDateAdd(resultSet.getTimestamp("date_add"));
+        product.setDateDelete(resultSet.getTimestamp("date_delete"));
+        product.setDateUpdate(resultSet.getTimestamp("date_update"));
         product.setDeleted(resultSet.getBoolean("deleted"));
         return product;
 

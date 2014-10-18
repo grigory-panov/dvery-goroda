@@ -15,9 +15,45 @@ public class Feedback implements Serializable {
     private String author;
     private String text;
     private Date dateAdd;
+    private Date dateApprove;
+    private Date dateDelete;
     private boolean approved;
     private boolean deleted;
     private String ip;
+    private String country;
+    private String city;
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public Date getDateDelete() {
+        return dateDelete;
+    }
+
+    public void setDateDelete(Date dateDelete) {
+        this.dateDelete = dateDelete;
+    }
+
+    public Date getDateApprove() {
+        return dateApprove;
+    }
+
+    public void setDateApprove(Date dateApprove) {
+        this.dateApprove = dateApprove;
+    }
 
     public String getIp() {
         return ip;
