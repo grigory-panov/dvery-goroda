@@ -151,6 +151,9 @@ public class CategoryController {
         if (page == null || page <= 0) {
             page = 1;
         }
+        if(id == 0){
+            id = categoryService.findAll().get(0).getId();
+        }
         //todo: ошибки должны быть оработаны и возвращены в теге errorText
         Category category = categoryService.findById(id);
         ProductListDto result = new ProductListDto();
