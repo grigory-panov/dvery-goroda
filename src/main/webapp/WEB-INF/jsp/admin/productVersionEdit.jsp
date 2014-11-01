@@ -9,8 +9,9 @@
     <div class="form-group">
          <label for="name" class="col-sm-2 control-label"><fmt:message key="table.name" bundle="${common}"/></label>
          <div class="col-xs-5">
-            <input type="text" class="form-control"  id="name" name="name" autofocus required value="${productVersion.name}"
-             placeholder='<fmt:message key="version.name.placeholder" bundle="${productMessages}"/>' tabindex="1">
+            <input type="text" class="form-control"  id="name" name="name" autofocus required
+             placeholder='<fmt:message key="version.name.placeholder" bundle="${productMessages}"/>' tabindex="1"
+             value="<c:out value='${productVersion.name}'/>">
          </div>
     </div>
     <div class="form-group">

@@ -70,4 +70,8 @@ public class ProductVersionService {
     public List<ProductVersion> findDeleted() {
         return productVersionDao.findDeleted();
     }
+
+    public int getMaxOrderInProduct(Long productId){
+        return productVersionDao.getMaxOrderInProduct(productId);
+    }
 }

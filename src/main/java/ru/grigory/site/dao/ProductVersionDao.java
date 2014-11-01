@@ -38,9 +38,9 @@ public class ProductVersionDao {
 
     public ProductVersion findById(long id) {
         String query = "select * from product_version where id = ? and deleted = false";
-        try{
+        try {
             return jdbcTemplate.queryForObject(query, new ProductVersionMapper(), id);
-        }catch (EmptyResultDataAccessException ex){
+        } catch (EmptyResultDataAccessException ex) {
             return null;
         }
 
@@ -48,18 +48,27 @@ public class ProductVersionDao {
 
     public ProductVersion findFirstVersion(long productId) {
         String query = "select * from product_version where product_id = ? and deleted = false order by \"order\" limit 1";
-        try{
+        try {
             return jdbcTemplate.queryForObject(query, new ProductVersionMapper(), productId);
-        }catch (EmptyResultDataAccessException ex){
+        } catch (EmptyResultDataAccessException ex) {
             return null;
         }
 
     }
 
     public void add(ProductVersion productVersion) {
-        String query = "insert into product_version ( product_id, price, name, description, size, date_add, \"order\") values (?,?,?,?,?,?,?) returning id";
-        try{
-            Long id =jdbcTemplate.queryForObject(query, Long.class,
+        try {
+
+            jdbcTemplate.update("update product_version v set \"order\" = \"order\"+1 where \"order\" >=? and product_id=?" +
+                            " and exists (select * from product_version where \"order\" = ? and product_id=?)",
+                    productVersion.getOrder(),
+                    productVersion.getProductId(),
+                    productVersion.getOrder(),
+                    productVersion.getProductId());
+
+            String query = "insert into product_version ( product_id, price, name, description, size, date_add, \"order\") values (?,?,?,?,?,?,?) returning id";
+
+            Long id = jdbcTemplate.queryForObject(query, Long.class,
                     productVersion.getProductId(),
                     productVersion.getPrice(),
                     productVersion.getName(),
@@ -68,24 +77,36 @@ public class ProductVersionDao {
                     new Date(),
                     productVersion.getOrder());
             productVersion.setId(id);
-        }catch (DataAccessException ex){
+        } catch (DataAccessException ex) {
             throw new DaoException(ex.getMessage());
         }
     }
 
     public void update(ProductVersion productVersion) {
-        String query = "UPDATE product_version\n" +
-                "   SET product_id=?, price=?, name=?, description=?, size=?, \n" +
-                "       date_update=now(), \"order\"=?\n" +
-                " WHERE id=?";
-        jdbcTemplate.update(query,
-                productVersion.getProductId(),
-                productVersion.getPrice(),
-                productVersion.getName(),
-                productVersion.getDescription(),
-                productVersion.getSize(),
-                productVersion.getOrder(),
-                productVersion.getId());
+        try {
+            jdbcTemplate.update("update product_version set \"order\" = \"order\"+1 where \"order\" >=? and product_id=? " +
+                            "and exists (select * from product_version where \"order\" = ? and product_id = ? and id <> ?)",
+                    productVersion.getOrder(),
+                    productVersion.getProductId(),
+                    productVersion.getOrder(),
+                    productVersion.getProductId(),
+                    productVersion.getId());
+
+            String query = "UPDATE product_version\n" +
+                    "   SET product_id=?, price=?, name=?, description=?, size=?, \n" +
+                    "       date_update=now(), \"order\"=?\n" +
+                    " WHERE id=?";
+            jdbcTemplate.update(query,
+                    productVersion.getProductId(),
+                    productVersion.getPrice(),
+                    productVersion.getName(),
+                    productVersion.getDescription(),
+                    productVersion.getSize(),
+                    productVersion.getOrder(),
+                    productVersion.getId());
+        }catch (DataAccessException ex){
+            throw new DaoException(ex.getMessage());
+        }
     }
 
     public void delete(long id) {
@@ -100,9 +121,9 @@ public class ProductVersionDao {
 
     public ProductVersion findByIdWithDeleted(long id) {
         String query = "select * from product_version where id = ?";
-        try{
+        try {
             return jdbcTemplate.queryForObject(query, new ProductVersionMapper(), id);
-        }catch (EmptyResultDataAccessException ex){
+        } catch (EmptyResultDataAccessException ex) {
             return null;
         }
 
@@ -111,5 +132,9 @@ public class ProductVersionDao {
     public List<ProductVersion> findDeleted() {
         String query = "select * from product_version where  deleted = true order by date_delete desc";
         return jdbcTemplate.query(query, new ProductVersionMapper());
+    }
+
+    public int getMaxOrderInProduct(Long productId) {
+        return jdbcTemplate.queryForObject("select max(\"order\") from product_version where product_id=?", Integer.class, productId);
     }
 }

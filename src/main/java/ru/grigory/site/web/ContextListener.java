@@ -23,8 +23,8 @@ public class ContextListener implements ServletContextListener {
 
         ServletContext sc = sce.getServletContext();
 
-        sc.setAttribute("javax.servlet.jsp.jstl.fmt.fallbackLocale", "ru");
-        sc.setAttribute("javax.servlet.jsp.jstl.fmt.localizationContext", "messages.*");
+        //sc.setAttribute("javax.servlet.jsp.jstl.fmt.fallbackLocale", "ru");
+        //sc.setAttribute("javax.servlet.jsp.jstl.fmt.localizationContext", "messages.*");
 
         XmlWebApplicationContext appContext = new XmlWebApplicationContext();
         appContext.setConfigLocation("/META-INF/spring/application-context.xml");

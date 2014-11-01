@@ -9,7 +9,8 @@
          <label for="name" class="col-sm-2 control-label"><fmt:message key="table.name" bundle="${common}"/></label>
          <div class="col-xs-5">
             <input type="text" class="form-control"  id="name" name="name" autofocus required
-             placeholder='<fmt:message key="version.name.placeholder" bundle="${productMessages}"/>' tabindex="1">
+             placeholder='<fmt:message key="version.name.placeholder" bundle="${productMessages}"/>' tabindex="1"
+             value="<c:out value='${product.name}'/>">
          </div>
     </div>
     <div class="form-group">
@@ -38,7 +39,8 @@
          <label for="order" class="col-sm-2 control-label"><fmt:message key="version.order.name" bundle="${productMessages}"/></label>
          <div class="col-xs-3">
             <input type="text" class="form-control" id="order" name="order" tabindex="5" required
-            placeholder='<fmt:message key="version.order.placeholder" bundle="${productMessages}"/>'>
+            placeholder='<fmt:message key="version.order.placeholder" bundle="${productMessages}"/>'
+            value="${order}">
          </div>
     </div>
     <div class="form-group">

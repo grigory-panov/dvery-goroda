@@ -137,6 +137,7 @@ public class ProductController {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("product", productService.findById(productId));
         params.put("global", settingsService.findAllAsMap());
+        params.put("order", productVersionService.getMaxOrderInProduct(productId) + 1 );
         params.put("title", "Добавление версии");
 
         return new ModelAndView("admin/productVersionAdd", params);
