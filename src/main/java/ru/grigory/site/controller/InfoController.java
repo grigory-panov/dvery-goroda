@@ -70,13 +70,13 @@ public class InfoController {
     }
 
     @RequestMapping(value = "admin/infoList.html", method = RequestMethod.POST)
-    public String gsaveInfo(@RequestParam(value = "id", required = false) Long id,
+    public String saveInfo(@RequestParam(value = "id", required = false) Long id,
                             @RequestParam(value = "header", required = true) String header,
                             @RequestParam(value = "body", required = true) String body){
 
         String code;
         Info info = null;
-        if(id ==null){
+        if(id != null){
              info = infoService.findById(id);
         }else{
             info = new Info();

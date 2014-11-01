@@ -106,7 +106,7 @@ public class ProductController {
         String resolvedMesage = Utils.resolveMessage(message);
         if(resolvedMesage != null){
             params.put("message", resolvedMesage);
-            params.put("messageClass",message.startsWith("error.") ? "text-danger" : "text-info");
+            params.put("messageClass", message.startsWith("error.") ? "text-danger" : "text-info");
         }
         params.put("productVersions", productVersionService.findByProduct(productId));
         params.put("title", "Редактирование версий товара");
@@ -153,8 +153,7 @@ public class ProductController {
                                      @RequestParam(value = "size", required = true) String size,
                                      @RequestParam(value = "img", required = false) MultipartFile file) {
 
-
-        ProductVersion productVersion = null;
+        ProductVersion productVersion;
         String code;
         if (id != null) {
             productVersion = productVersionService.findById(id);
@@ -229,9 +228,11 @@ public class ProductController {
     @RequestMapping(value = "admin/productList.html", method = RequestMethod.POST)
     @Secured(value = "ROLE_ADMIN")
     public String saveProduct(@RequestParam(value = "id", required = false) Long id,
-                              @RequestParam(value = "name", required = false) String name,
+                              @RequestParam(value = "name", required = true) String name,
                               @RequestParam(value = "description", required = false) String description,
-                              @RequestParam(value = "categoryId") Long categoryId) {
+                              @RequestParam(value = "categoryId", required = true) Long categoryId,
+                              @RequestParam(value = "newCategoryId", required = true) Long newCategoryId,
+                              @RequestParam(value = "order", required = true) int order) {
         String code;
         Product product;
         if (id != null) {
@@ -242,8 +243,8 @@ public class ProductController {
         if (product != null) {
             product.setName(name);
             product.setDescription(description);
-            product.setCategoryId(categoryId);
-
+            product.setCategoryId(newCategoryId);
+            product.setOrder(order);
             try {
                 if (product.getId() == null) {
                     productService.addProduct(product);
@@ -265,7 +266,7 @@ public class ProductController {
     @RequestMapping(value = "/product", method = RequestMethod.GET)
     public
     @ResponseBody
-    ProductDto getCategoryJSON(@RequestParam(value = "id") long id) {
+    ProductDto getProductVersionsJSON(@RequestParam(value = "id") long id) {
 
         Product product = productService.findById(id);
 

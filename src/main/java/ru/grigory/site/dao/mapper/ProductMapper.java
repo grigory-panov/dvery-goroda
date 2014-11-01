@@ -26,7 +26,7 @@ public class ProductMapper implements RowMapper<Product> {
         product.setDateDelete(resultSet.getTimestamp("date_delete"));
         product.setDateUpdate(resultSet.getTimestamp("date_update"));
         product.setDeleted(resultSet.getBoolean("deleted"));
+        product.setOrder(resultSet.getInt("order"));
         return product;
-
     }
 }

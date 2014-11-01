@@ -8,7 +8,7 @@
     <div class="form-group">
          <label for="name" class="col-sm-2 control-label"><fmt:message key="table.name" bundle="${common}"/></label>
          <div class="col-xs-5">
-            <input type="text" class="form-control"  id="name" name="name" autofocus required value="${product.name}"
+            <input type="text" class="form-control"  id="name" name="name" autofocus required value="<c:out value='${product.name}'/>"
              placeholder='<fmt:message key="product.name.placeholder" bundle="${productMessages}"/>' tabindex="1">
          </div>
     </div>
@@ -21,23 +21,31 @@
     </div>
 
     <div class="form-group">
-         <label for="categoryId" class="col-sm-2 control-label"><fmt:message key="product.category.name" bundle="${productMessages}"/></label>
+         <label for="newCategoryId" class="col-sm-2 control-label"><fmt:message key="product.category.name" bundle="${productMessages}"/></label>
          <div class="col-xs-5">
-             <select name="categoryId" tabindex="3" class="form-control">
+             <select name="newCategoryId" tabindex="3" class="form-control">
                     <c:forEach var="o" items="${categories}">
-                     <c:if test="${o.id eq category.id}">
+                     <c:if test="${o.id eq product.categoryId}">
                         <option value="${o.id}" selected>${o.name}</option>
                      </c:if>
-                     <c:if test="${o.id ne category.id}">
+                     <c:if test="${o.id ne product.categoryId}">
                         <option value="${o.id}">${o.name}</option>
                      </c:if>
                     </c:forEach>
                  </select>
          </div>
     </div>
+        </div>
+            <div class="form-group">
+                 <label for="order" class="col-sm-2 control-label"><fmt:message key="product.order.name" bundle="${productMessages}"/></label>
+                 <div class="col-xs-5">
+                    <input type="text" class="form-control"  id="order" name="order" autofocus required value="${product.order}"
+                     placeholder='<fmt:message key="product.order.placeholder" bundle="${productMessages}"/>' tabindex="5">
+                 </div>
+            </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
-            <button type="submit" id="submitButton" class="btn btn-primary" tabindex="5">
+            <button type="submit" id="submitButton" class="btn btn-primary" tabindex="6">
                 <fmt:message key="product.save.button" bundle="${productMessages}"/>
             </button>
         </div>

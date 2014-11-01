@@ -18,9 +18,18 @@ public class Product implements Serializable {
     private String description;
     private Long categoryId;
     private boolean deleted;
+    private int order;
     private Date dateAdd;
     private Date dateDelete;
     private Date dateUpdate;
+
+    public int getOrder() {
+        return order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
 
     public Date getDateAdd() {
         return dateAdd;

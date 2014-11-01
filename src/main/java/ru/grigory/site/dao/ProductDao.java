@@ -49,7 +49,7 @@ public class ProductDao {
     }
 
     public List<Product> findByCategory(long categoryId) throws DaoException{
-        return jdbcTemplate.query("select * from product where deleted = false and category_id = ?", new ProductMapper(), categoryId);
+        return jdbcTemplate.query("select * from product where deleted = false and category_id = ? order by \"order\"", new ProductMapper(), categoryId);
     }
 
     public int countByCategory(long categoryId) throws DaoException{
@@ -63,8 +63,8 @@ public class ProductDao {
     }
 
     public void add(Product product){
-        jdbcTemplate.update("insert into product (name, description, category_id, date_add) values (?,?,?, now())",
-                product.getName(), product.getDescription(), product.getCategoryId());
+        jdbcTemplate.update("insert into product (name, description, category_id, date_add, \"order\") values (?,?,?, now(), ?)",
+                product.getName(), product.getDescription(), product.getCategoryId(), product.getOrder());
     }
 
     public void update(Product product) throws ProductNotFoundException{
@@ -72,14 +72,14 @@ public class ProductDao {
         if(oldProduct == null){
             throw new ProductNotFoundException("id=" + product.getId());
         }
-        String query = "update product set name=?, description=?, category_id = ?, deleted =?, date_update=now()  where id =?";
-        List params = new ArrayList();
-        params.add(product.getName());
-        params.add(product.getDescription());
-        params.add(product.getCategoryId());
-        params.add(product.isDeleted());
-        params.add(product.getId());
-        jdbcTemplate.update(query, params.toArray());
+        String query = "update product set name=?, description=?, category_id = ?, deleted =?, date_update=now(), \"order\"=? where id = ?";
+        jdbcTemplate.update(query,
+                product.getName(),
+                product.getDescription(),
+                product.getCategoryId(),
+                product.isDeleted(),
+                product.getOrder(),
+                product.getId());
     }
 
     public void delete(long id) {
