@@ -34,13 +34,14 @@
                  </select>
          </div>
     </div>
-        <div class="form-group">
-             <label for="order" class="col-sm-2 control-label"><fmt:message key="product.order.name" bundle="${productMessages}"/></label>
-             <div class="col-xs-5">
-                <input type="text" class="form-control"  id="order" name="order" autofocus required
-                 placeholder='<fmt:message key="product.order.placeholder" bundle="${productMessages}"/>' tabindex="5">
-             </div>
-        </div>
+    <div class="form-group">
+         <label for="order" class="col-sm-2 control-label"><fmt:message key="product.order.name" bundle="${productMessages}"/></label>
+         <div class="col-xs-5">
+            <input type="text" class="form-control"  id="order" name="order" autofocus required
+             placeholder='<fmt:message key="product.order.placeholder" bundle="${productMessages}"/>'
+             tabindex="5" value="${order}">
+         </div>
+    </div>
 
 
     <div class="form-group">

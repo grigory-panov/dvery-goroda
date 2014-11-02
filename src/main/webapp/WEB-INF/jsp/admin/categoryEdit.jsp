@@ -9,14 +9,14 @@
     <div class="form-group">
          <label for="name" class="col-sm-2 control-label"><fmt:message key="table.name" bundle="${common}"/></label>
          <div class="col-xs-5">
-            <input type="text" class="form-control" value="${category.name}" id="name" name="name" autofocus required
+            <input type="text" class="form-control" value="<c:out value='${category.name}'/>" id="name" name="name" autofocus required
              placeholder='<fmt:message key="category.name.placeholder" bundle="${categoryMessage}"/>' tabindex="1">
          </div>
     </div>
     <div class="form-group">
          <label for="description" class="col-sm-2 control-label"><fmt:message key="table.description" bundle="${common}"/></label>
          <div class="col-sm-10">
-            <input type="text" class="form-control" value="${category.description}" id="description" name="description"
+            <input type="text" class="form-control" value="<c:out value='${category.description}'/>" id="description" name="description"
             placeholder='<fmt:message key="category.description.placeholder" bundle="${categoryMessage}"/>' tabindex="2">
          </div>
     </div>

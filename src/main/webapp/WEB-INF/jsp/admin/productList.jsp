@@ -21,16 +21,18 @@
             <th><fmt:message key="table.description" bundle="${common}"/></th>
             <th><fmt:message key="table.dateAdd" bundle="${common}"/></th>
             <th><fmt:message key="table.dateUpdate" bundle="${common}"/></th>
+            <th><fmt:message key="product.order.name" bundle="${productMessages}"/></th>
             <th><fmt:message key="product.version.list" bundle="${productMessages}"/></th>
             <th><fmt:message key="table.delete" bundle="${common}"/></th>
         </tr>
         <c:forEach var="o" items="${products}">
             <tr>
                 <td>${o.id}</td>
-                <td><a href='<c:url value="productEdit.html?id=${o.id}"/>'>${o.name}</a></td>
-                <td>${o.description}</td>
+                <td><a href='<c:url value="productEdit.html?id=${o.id}"/>'><c:out value="${o.name}"/></a></td>
+                <td><c:out value="${o.description}"/></td>
                 <td>${o.dateAdd}</td>
                 <td>${o.dateUpdate}</td>
+                <td>${o.order}</td>
                 <td><a href='<c:url value="productVersionList.html?productId=${o.id}"/>'><span class="glyphicon glyphicon-list-alt"></span></a></td>
                 <td><a href='<c:url value="/action/delete/product/${o.id}"/>' class="delete"><span class="glyphicon glyphicon-trash"></span></a></td>
             </tr>

@@ -11,7 +11,7 @@
           </div>
           <div class="form-group">
               <label for="description"><fmt:message key="table.description" bundle="${common}"/></label>
-              <input type="text" value="${settings.description}" class="form-control" name="description" placeholder='<fmt:message key="settings.description.placeholder" bundle="${settingsMessage}"/>'>
+              <input type="text" value="<c:out value='${settings.description}'/>" class="form-control" name="description" placeholder='<fmt:message key="settings.description.placeholder" bundle="${settingsMessage}"/>'>
           </div>
           <div class="form-group">
           <button type="submit" id="submitButton" class="btn btn-primary"><fmt:message key="settings.update.button" bundle="${settingsMessage}"/></button>

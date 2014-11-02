@@ -69,4 +69,8 @@ public class ProductService {
     public List<Product> findDeleted() {
         return productDao.findDeleted();
     }
+
+    public int getMaxOrderByCategory(long categoryId){
+        return productDao.getMaxOrderInCategory(categoryId);
+    }
 }

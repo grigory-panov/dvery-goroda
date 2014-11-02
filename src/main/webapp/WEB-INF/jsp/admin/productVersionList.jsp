@@ -27,11 +27,11 @@
         <c:forEach var="o" items="${productVersions}">
             <tr>
                 <td>${o.id}</td>
-                <td><a href='<c:url value="productVersionEdit.html?id=${o.id}"/>'>${o.name}</a></td>
-                <td>${o.description}</td>
-                <td>${o.price}</td>
-                <td>${o.size}</td>
-                <td>${o.order}</td>
+                <td><a href='<c:url value="productVersionEdit.html?id=${o.id}"/>'><c:out value="${o.name}"/></a></td>
+                <td><c:out value="${o.description}"/></td>
+                <td><c:out value="${o.price}"/></td>
+                <td><c:out value="${o.size}"/></td>
+                <td><c:out value="${o.order}"/></td>
                 <td>
                     <a href='<c:url value="/image/version/${o.productId}/${o.id}"/>'>
                         <img src='<c:url value="/image/thumbnail/${o.productId}/${o.id}"/>'

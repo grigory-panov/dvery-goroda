@@ -24,10 +24,10 @@
         <c:forEach var="o" items="${categories}">
             <tr>
                 <td>${o.id}</td>
-                <td><a href='<c:url value="categoryEdit.html?id=${o.id}"/>'>${o.name}</a></td>
-                <td>${o.description}</td>
-                <td>${o.group}</td>
-                <td>${o.order}</td>
+                <td><a href='<c:url value="categoryEdit.html?id=${o.id}"/>'><c:out value="${o.name}"/></a></td>
+                <td><c:out value="${o.description}"/></td>
+                <td><c:out value="${o.group}"/></td>
+                <td><c:out value="${o.order}"/></td>
                 <td><a href='<c:url value="productList.html?categoryId=${o.id}"/>'><span class="glyphicon glyphicon-list-alt"></span></a></td>
                 <td><a href='<c:url value="/action/delete/category/${o.id}"/>' class="delete"><span class="glyphicon glyphicon-trash"></span></a></td>
             </tr>

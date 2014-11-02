@@ -1,6 +1,7 @@
 package ru.grigory.site.dao;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -63,8 +64,19 @@ public class ProductDao {
     }
 
     public void add(Product product){
-        jdbcTemplate.update("insert into product (name, description, category_id, date_add, \"order\") values (?,?,?, now(), ?)",
-                product.getName(), product.getDescription(), product.getCategoryId(), product.getOrder());
+        try {
+            jdbcTemplate.update("update product set \"order\" = \"order\"+1 where \"order\" >=? and category_id=?" +
+                            " and exists (select * from product where \"order\" = ? and category_id=?)",
+                    product.getOrder(),
+                    product.getCategoryId(),
+                    product.getOrder(),
+                    product.getCategoryId());
+
+            jdbcTemplate.update("insert into product (name, description, category_id, date_add, \"order\") values (?,?,?, now(), ?)",
+                    product.getName(), product.getDescription(), product.getCategoryId(), product.getOrder());
+        }catch (DataAccessException ex){
+            throw new DaoException(ex.getMessage());
+        }
     }
 
     public void update(Product product) throws ProductNotFoundException{
@@ -72,14 +84,26 @@ public class ProductDao {
         if(oldProduct == null){
             throw new ProductNotFoundException("id=" + product.getId());
         }
-        String query = "update product set name=?, description=?, category_id = ?, deleted =?, date_update=now(), \"order\"=? where id = ?";
-        jdbcTemplate.update(query,
-                product.getName(),
-                product.getDescription(),
-                product.getCategoryId(),
-                product.isDeleted(),
-                product.getOrder(),
-                product.getId());
+        try {
+            jdbcTemplate.update("update product set \"order\" = \"order\"+1 where \"order\" >=? and category_id=?" +
+                            " and exists (select * from product where \"order\" = ? and category_id=? and id <> ?)",
+                    product.getOrder(),
+                    product.getCategoryId(),
+                    product.getOrder(),
+                    product.getCategoryId(),
+                    product.getId());
+
+            String query = "update product set name=?, description=?, category_id = ?, deleted =?, date_update=now(), \"order\"=? where id = ?";
+            jdbcTemplate.update(query,
+                    product.getName(),
+                    product.getDescription(),
+                    product.getCategoryId(),
+                    product.isDeleted(),
+                    product.getOrder(),
+                    product.getId());
+        }catch (DataAccessException ex){
+            throw new DaoException(ex.getMessage());
+        }
     }
 
     public void delete(long id) {
@@ -96,4 +120,9 @@ public class ProductDao {
     public List<Product> findDeleted() {
         return jdbcTemplate.query("select * from product where deleted = true order by date_delete desc", new ProductMapper());
     }
+
+    public int getMaxOrderInCategory(long categoryId) {
+        return jdbcTemplate.queryForObject("select max(\"order\") from product where category_id=?", Integer.class, categoryId);
+    }
+
 }

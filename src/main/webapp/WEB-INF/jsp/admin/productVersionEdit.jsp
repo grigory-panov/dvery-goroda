@@ -17,7 +17,7 @@
     <div class="form-group">
          <label for="description" class="col-sm-2 control-label"><fmt:message key="table.description" bundle="${common}"/></label>
          <div class="col-sm-10">
-            <input type="text" class="form-control" id="description" name="description" value="${productVersion.description}"
+            <input type="text" class="form-control" id="description" name="description" value="<c:out value='${productVersion.description}'/>"
              placeholder='<fmt:message key="version.description.placeholder" bundle="${productMessages}"/>' tabindex="2">
          </div>
     </div>
@@ -32,7 +32,8 @@
     <div class="form-group">
          <label for="size" class="col-sm-2 control-label"><fmt:message key="version.size.name" bundle="${productMessages}"/></label>
          <div class="col-xs-3">
-            <input type="text" class="form-control" id="size" name="size" tabindex="4" value="${productVersion.size}"
+            <input type="text" class="form-control" id="size" name="size" tabindex="4"
+            value="<c:out value='${productVersion.size}'/>"
             placeholder='<fmt:message key="version.size.placeholder" bundle="${productMessages}"/>'>
          </div>
     </div>

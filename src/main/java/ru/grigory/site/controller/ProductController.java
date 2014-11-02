@@ -221,6 +221,7 @@ public class ProductController {
         params.put("categories", categoryService.findAll());
         params.put("category", categoryService.findById(categoryId));
         params.put("global", settingsService.findAllAsMap());
+        params.put("order", productService.getMaxOrderByCategory(categoryId) + 1);
         params.put("title", "Добавление товара");
 
         return new ModelAndView("admin/productAdd", params);

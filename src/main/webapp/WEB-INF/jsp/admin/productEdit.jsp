@@ -15,8 +15,9 @@
     <div class="form-group">
          <label for="description" class="col-sm-2 control-label"><fmt:message key="table.description" bundle="${common}"/></label>
          <div class="col-sm-10">
-            <input type="text" class="form-control" id="description" name="description" value="${product.description}"
-             placeholder='<fmt:message key="product.description.placeholder" bundle="${productMessages}"/>' tabindex="2">
+            <input type="text" class="form-control" id="description" name="description"
+             value="<c:out value='${product.description}'/>" tabindex="2"
+             placeholder='<fmt:message key="product.description.placeholder" bundle="${productMessages}"/>' >
          </div>
     </div>
 
@@ -35,14 +36,14 @@
                  </select>
          </div>
     </div>
-        </div>
-            <div class="form-group">
-                 <label for="order" class="col-sm-2 control-label"><fmt:message key="product.order.name" bundle="${productMessages}"/></label>
-                 <div class="col-xs-5">
-                    <input type="text" class="form-control"  id="order" name="order" autofocus required value="${product.order}"
-                     placeholder='<fmt:message key="product.order.placeholder" bundle="${productMessages}"/>' tabindex="5">
-                 </div>
-            </div>
+
+    <div class="form-group">
+         <label for="order" class="col-sm-2 control-label"><fmt:message key="product.order.name" bundle="${productMessages}"/></label>
+         <div class="col-xs-5">
+            <input type="text" class="form-control"  id="order" name="order" autofocus required value="${product.order}"
+             placeholder='<fmt:message key="product.order.placeholder" bundle="${productMessages}"/>' tabindex="5">
+         </div>
+    </div>
     <div class="form-group">
         <div class="col-sm-offset-2 col-sm-10">
             <button type="submit" id="submitButton" class="btn btn-primary" tabindex="6">
