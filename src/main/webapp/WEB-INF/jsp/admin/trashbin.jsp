@@ -94,6 +94,25 @@
         </c:forEach>
     </table>
 </c:if>
+<h3>Удаленные партнеры</h3>
+<c:if test="${not empty partnersTrash}">
+    <table class="table">
+        <tr>
+            <th><fmt:message key="table.id" bundle="${common}"/></th>
+            <th><fmt:message key="table.name" bundle="${common}"/></th>
+            <th>url</th>
+            <th><fmt:message key="table.restore" bundle="${common}"/></th>
+        </tr>
+        <c:forEach var="o" items="${partnersTrash}">
+            <tr>
+                <td>${o.id}</td>
+                <td>${o.name}</td>
+                <td>${o.url}</td>
+                <td><a href='<c:url value="/action/restore/partner/${o.id}"/>' class="restore"><span class="glyphicon glyphicon-plus"></span></a></td>
+            </tr>
+        </c:forEach>
+    </table>
+</c:if>
 
 </div>
 

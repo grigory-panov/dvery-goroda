@@ -32,7 +32,8 @@
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
                 <li><a href="trashbin.html"><fmt:message key="menu.trashbin" bundle="${common}"/></a></li>
-                <li><a href="infoList.html"><fmt:message key="menu.information" bundle="${common}"/></a></li>
+                <li><a href="infoList.html"><fmt:message key="menu.information.articles" bundle="${common}"/></a></li>
+                <li><a href="partnersList.html"><fmt:message key="menu.information.partners" bundle="${common}"/></a></li>
                 <li><a href="feedbackList.html"><fmt:message key="menu.feedback" bundle="${common}"/></a></li>
                 <li><a href="settingsList.html"><fmt:message key="menu.settings" bundle="${common}"/></a></li>
                 <li><a href="../logout"><fmt:message key="menu.logout" bundle="${common}"/></a></li>

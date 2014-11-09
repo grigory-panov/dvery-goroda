@@ -27,7 +27,7 @@
                 <td>${o.id}</td>
                 <td><a href='<c:url value="partnerEdit.html?id=${o.id}"/>'><c:out value="${o.name}"/></a></td>
                 <td><a href="<c:out value='${o.url}'/>"/><c:out value="${o.url}"/></a></td>
-                <td><img src="image/partner/${o.id}" alt="X"></td>
+                <td><img src="<c:url value='/image/partner/${o.id}'/>" alt="X"></td>
                 <td><a href='<c:url value="/action/delete/partner/${o.id}"/>' class="delete"><span class="glyphicon glyphicon-trash"></span></a></td>
             </tr>
         </c:forEach>

@@ -54,4 +54,17 @@ public class PartnerService {
     public void deletePartner(Long partnerId){
         partnerDao.delete(partnerId);
     }
+
+    public Partner findByIdWithDeleted(long id) {
+        return partnerDao.findByIdWithDeleted(id);
+    }
+
+    @Transactional(readOnly = false)
+    public void restorePartner(long id) {
+        partnerDao.restore(id);
+    }
+
+    public List<Partner> findDeleted() {
+        return partnerDao.findDeleted();
+    }
 }

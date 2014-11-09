@@ -53,4 +53,16 @@ public class PartnerDao {
     public void restore(Long partnerId){
         jdbcTemplate.update("update partner set deleted = false where id=?", partnerId);
     }
+
+    public Partner findByIdWithDeleted(long id) {
+        try {
+            return jdbcTemplate.queryForObject("select * from partner where id=?", new PartnerMapper(), id);
+        }catch (EmptyResultDataAccessException ex){
+            return null;
+        }
+    }
+
+    public List<Partner> findDeleted() {
+        return jdbcTemplate.query("select * from partner where deleted = true order by id", new PartnerMapper());
+    }
 }

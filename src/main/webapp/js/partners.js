@@ -14,12 +14,16 @@ function loadPartners(){
         success: function( json ) {
             console.log( "json ok!" );
             for(var i = 0; i< json.partners.length; i++){
-                var item = $("<div class=\"item\"/>");
-                var link = $("<a href=\""+ json.partners[i].url + "\"/>");
-                var image = $("<img src=\"image/partner/"+ json.partners[i].id +"\" class=\"img200\">");
+                var item = $("<div class=\"item\" style='padding-bottom:10px'/>");
+                var image = $("<img src=\"image/partner/"+ json.partners[i].id +"\">");
                 image.attr("alt", json.partners[i].name);
-                image.appendTo(link);
-                link.appendTo(item);
+                if(json.partners[i].url){
+                    var link = $("<a href=\""+ json.partners[i].url + "\"/>");
+                    image.appendTo(link);
+                    link.appendTo(item);
+                }else{
+                    image.appendTo(item);
+                }
                 item.appendTo("#partners");
             }
 

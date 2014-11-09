@@ -33,9 +33,6 @@
         </div>
         <div class="collapse navbar-collapse">
             <ul class="nav navbar-nav">
-                <li><a href="info.html"><fmt:message key="menu.information" bundle="${common}"/></a></li>
-                <li><a href="feedback.html"><fmt:message key="menu.feedback" bundle="${common}"/></a></li>
-                <li><a href="contacts.html"><fmt:message key="menu.contacts" bundle="${common}"/></a></li>
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown"><fmt:message key="menu.products" bundle="${common}"/>
                     <span class="caret"></span></a>
@@ -47,6 +44,17 @@
                         <li class="dropdown-header"></li>-->
                     </ul>
                 </li>
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown"><fmt:message key="menu.information" bundle="${common}"/>
+                    <span class="caret"></span></a>
+                    <ul class="dropdown-menu" role="menu">
+                    <li><a href="info.html"><fmt:message key="menu.information.articles" bundle="${common}"/></a></li>
+                    <li><a href="partners.html"><fmt:message key="menu.information.partners" bundle="${common}"/></a></li>
+                    </ul>
+                </li>
+                <li><a href="feedback.html"><fmt:message key="menu.feedback" bundle="${common}"/></a></li>
+                <li><a href="contacts.html"><fmt:message key="menu.contacts" bundle="${common}"/></a></li>
+
             </ul>
         </div><!--/.nav-collapse -->
 

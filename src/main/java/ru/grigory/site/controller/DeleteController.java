@@ -20,6 +20,9 @@ import ru.grigory.site.service.*;
 public class DeleteController {
 
     @Autowired
+    private PartnerService partnerService;
+
+    @Autowired
     private InfoService infoService;
 
     @Autowired
@@ -241,6 +244,57 @@ public class DeleteController {
         return result;
     }
 
+    @RequestMapping(value="/delete/partner/{id}",method = RequestMethod.DELETE)
+    @Secured(value = "ROLE_ADMIN")
+    public @ResponseBody
+    DeleteResult deletePartnerJSON(@PathVariable(value = "id") long id) {
+
+        Partner partner = partnerService.findByIdWithDeleted(id);
+        DeleteResult result = new DeleteResult();
+        result.setError("OK");
+
+        if(partner == null){
+            result.setError("Не найден партнер для удаления");
+            return result;
+        }
+        if(partner.isDeleted()){
+            result.setError("Партнер уже был удален");
+            return result;
+        }
+        try{
+            partnerService.deletePartner(id);
+        }catch (Exception ex){
+            result.setError("Произошла ошибка при удалении");
+            return result;
+        }
+        return result;
+    }
+
+    @RequestMapping(value="/restore/partner/{id}",method = RequestMethod.DELETE)
+    @Secured(value = "ROLE_ADMIN")
+    public @ResponseBody
+    DeleteResult restorePartnerJSON(@PathVariable(value = "id") long id) {
+
+        Partner partner = partnerService.findByIdWithDeleted(id);
+        DeleteResult result = new DeleteResult();
+        result.setError("OK");
+
+        if(partner == null){
+            result.setError("Не найден партнер для восстановления");
+            return result;
+        }
+        if(!partner.isDeleted()){
+            return result;
+        }
+        try{
+            partnerService.restorePartner(id);
+        }catch (Exception ex){
+            result.setError("Произошла ошибка при восстановлении");
+            return result;
+        }
+        return result;
+    }
+
     @RequestMapping(value="/delete/feedback/{id}",method = RequestMethod.DELETE)
     @Secured(value = "ROLE_ADMIN")
     public @ResponseBody
@@ -251,7 +305,7 @@ public class DeleteController {
         result.setError("OK");
 
         if(feedback == null){
-            result.setError("Не найден лтзыв для удаления");
+            result.setError("Не найден отзыв для удаления");
             return result;
         }
         if(feedback.isDeleted()){

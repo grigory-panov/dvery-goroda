@@ -17,7 +17,7 @@
     <div class="form-group">
          <label for="url" class="col-sm-2 control-label"><fmt:message key="partner.url.name" bundle="${partnerMessages}"/></label>
          <div class="col-xs-3">
-            <input type="text" class="form-control" id="url" name="url" tabindex="2" required
+            <input type="text" class="form-control" id="url" name="url" tabindex="2"
              placeholder='<fmt:message key="partner.url.placeholder" bundle="${partnerMessages}"/>'
              value="<c:out value='${partner.url}'/>">
          </div>

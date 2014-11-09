@@ -22,6 +22,9 @@ import java.util.Map;
 public class TrashController {
 
     @Autowired
+    private PartnerService partnerService;
+
+    @Autowired
     private CategoryService categoryService;
 
     @Autowired
@@ -46,6 +49,7 @@ public class TrashController {
         params.put("productsTrash", productService.findDeleted());
         params.put("versionsTrash", productVersionService.findDeleted());
         params.put("infosTrash", infoService.findDeleted());
+        params.put("partnersTrash", partnerService.findDeleted());
         params.put("title",  "Восстановление удаленного");
 
         return new ModelAndView("admin/trashbin", params);
