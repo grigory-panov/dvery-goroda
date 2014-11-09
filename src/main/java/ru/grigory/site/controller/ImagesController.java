@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import ru.grigory.site.domain.Partner;
 import ru.grigory.site.domain.ProductVersion;
+import ru.grigory.site.service.PartnerService;
 import ru.grigory.site.service.ProductVersionService;
 import ru.grigory.site.service.SettingsService;
 
@@ -35,6 +37,9 @@ public class ImagesController {
 
     @Autowired
     private SettingsService settingsService;
+
+    @Autowired
+    private PartnerService partnerService;
 
     private String getStorageDir(){
         return settingsService.findByKey("storage_dir").getValue();
@@ -82,5 +87,15 @@ public class ImagesController {
 
     }
 
+    @ResponseBody
+    @RequestMapping(value = "/partner/{partnerId}", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
+    public byte[] getImgPartner(@PathVariable Long partnerId) throws IOException {
+
+        Partner partner = partnerService.findById(partnerId);
+        if(partner == null){
+            return null;
+        }
+        return partner.getBanner();
+    }
 
 }

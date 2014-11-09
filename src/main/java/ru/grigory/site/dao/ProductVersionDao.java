@@ -135,6 +135,6 @@ public class ProductVersionDao {
     }
 
     public int getMaxOrderInProduct(Long productId) {
-        return jdbcTemplate.queryForObject("select max(\"order\") from product_version where product_id=?", Integer.class, productId);
+        return jdbcTemplate.queryForObject("select coalesce(max(\"order\"), 0) from product_version where product_id=?", Integer.class, productId);
     }
 }

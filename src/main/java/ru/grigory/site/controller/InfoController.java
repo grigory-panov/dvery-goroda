@@ -4,6 +4,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -54,6 +55,7 @@ public class InfoController {
     }
 
     @RequestMapping(value = "admin/infoList.html", method = RequestMethod.GET)
+    @Secured(value = "ROLE_ADMIN")
     public ModelAndView getInfoList(@RequestParam(value = "message", required = false) String message){
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("infos", infoService.findAll());
@@ -70,6 +72,7 @@ public class InfoController {
     }
 
     @RequestMapping(value = "admin/infoList.html", method = RequestMethod.POST)
+    @Secured(value = "ROLE_ADMIN")
     public String saveInfo(@RequestParam(value = "id", required = false) Long id,
                             @RequestParam(value = "header", required = true) String header,
                             @RequestParam(value = "body", required = true) String body){
@@ -103,6 +106,7 @@ public class InfoController {
 
 
     @RequestMapping(value = "admin/infoEdit.html", method = RequestMethod.GET)
+    @Secured(value = "ROLE_ADMIN")
     public ModelAndView editInfo(@RequestParam(value = "id", required = true) Long id){
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("infoMessage", infoService.findById(id));
@@ -113,6 +117,7 @@ public class InfoController {
     }
 
     @RequestMapping(value = "admin/infoAdd.html", method = RequestMethod.GET)
+    @Secured(value = "ROLE_ADMIN")
     public ModelAndView addInfo(){
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("global", settingsService.findAllAsMap());

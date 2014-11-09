@@ -122,7 +122,7 @@ public class ProductDao {
     }
 
     public int getMaxOrderInCategory(long categoryId) {
-        return jdbcTemplate.queryForObject("select max(\"order\") from product where category_id=?", Integer.class, categoryId);
+        return jdbcTemplate.queryForObject("select coalesce(max(\"order\"),0) from product where category_id=?", Integer.class, categoryId);
     }
 
 }
