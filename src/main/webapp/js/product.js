@@ -1,7 +1,9 @@
 if (typeof jQuery === 'undefined') { throw new Error('jQuery required!') }
 
 $( document ).ready(function() {
-      loadProduct(getParameterByName("id"));
+      var productId = getParameterByName("id");
+      loadProduct(productId);
+      loadRelated(productId);
 });
 
 
@@ -51,7 +53,7 @@ function loadProduct(productId){
             if(!$("#error").lenght){
                 $("<div class=\"alert alert-danger fade in\" role=\"alert\" id=\"error\">" +
                     "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" ><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
-                    "Случилось ошибка. Попробуйте повторить запрос позднее." +
+                    "Случилась ошибка. Попробуйте повторить запрос позднее." +
                     "</div>").prependTo("#container");
             }
             $("#error").alert();
@@ -62,6 +64,56 @@ function loadProduct(productId){
         }
     });
 }
+
+function loadRelated(productId){
+    $.ajax({
+        url: "data/related",
+        type: "GET",
+        dataType : "json",
+        data : {
+             "id" : productId,
+        },
+
+        success: function( json ) {
+            console.log( "related json ok!" );
+            $("#related").empty();
+            if(json.product.length > 0){
+                $("<h3/>").text("Дополнительные товары").appendTo("#related");
+                var row = $("<div class='row'/>")
+                row.appendTo("#related");
+
+                for(var i = 0; i< json.product.length; i++){
+                    var wrapper = $("<div class=\"col-sm-6 col-md-4\"/>");
+                    var thumbnail = $("<div class=\"thumbnail\"/>");
+                    var image = $("<a href=\"product.html?id="+ json.product[i].id +"\"><img src=\"image/product/"+ json.product[i].id +"\"/></a>");
+                    image.appendTo(thumbnail);
+                    thumbnail.appendTo(wrapper);
+                    wrapper.appendTo(row);
+                }
+                row.appendTo("#related");
+            }
+        },
+
+        error: function( xhr, status, errorThrown ) {
+            console.log( "json error!" );
+            console.log( xhr );
+            console.log( status );
+            console.log( errorThrown );
+
+            if(!$("#error").lenght){
+                $("<div class=\"alert alert-danger fade in\" role=\"alert\" id=\"error\">" +
+                    "<button type=\"button\" class=\"close\" data-dismiss=\"alert\" ><span aria-hidden=\"true\">&times;</span><span class=\"sr-only\">Close</span></button>" +
+                    "Случилась ошибка. Попробуйте повторить запрос позднее." +
+                    "</div>").prependTo("#container");
+            }
+            $("#error").alert();
+        },
+        complete: function( xhr, status ) {
+            console.log( "complete!" );
+        }
+    });
+}
+
 
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");

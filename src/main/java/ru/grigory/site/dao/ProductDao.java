@@ -125,4 +125,21 @@ public class ProductDao {
         return jdbcTemplate.queryForObject("select coalesce(max(\"order\"),0) from product where category_id=?", Integer.class, categoryId);
     }
 
+    public List<Product> getRelatedProducts(long productId) {
+        return jdbcTemplate.query("select * from product where id in (select related_id from product_relation where product_id=?)", new ProductMapper(), productId);
+    }
+
+    public void addRelation(long productId, long relationId) {
+        jdbcTemplate.update("insert into product_relation (product_id, related_id)  select ?, ?" +
+                " where not exists (select * from product_relation where product_id = ? and related_id = ?)",
+                productId, relationId, productId, relationId);
+
+    }
+
+    public void deleteRelation(long productId, long relationId) {
+        jdbcTemplate.update("delete from product_relation where product_id = ? and related_id = ?",
+                productId, relationId);
+
+    }
+
 }

@@ -8,7 +8,7 @@
 <p class="${messageClass}">${message}</p>
 </c:if>
 
-<a href='<c:url value="categoryAdd.html"/>'><th><fmt:message key="category.add.link" bundle="${categoryMessage}"/></th></a>
+<a href='<c:url value="categoryAdd.html"/>' class="btn btn-primary"><fmt:message key="category.add.link" bundle="${categoryMessage}"/></a>
 
 <c:if test="${not empty categories}">
     <table class="table">

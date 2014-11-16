@@ -177,5 +177,33 @@ public class CategoryController {
         return result;
     }
 
+    @RequestMapping(value = "/categoryFull", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    ProductListDto getCategoryFullJSON(@RequestParam(value = "id") long id) {
+        if(id == 0){
+            id = categoryService.findAll().get(0).getId();
+        }
+        Category category = categoryService.findById(id);
+        ProductListDto result = new ProductListDto();
+        if(category == null){
+            result.setCount(0);
+            result.setProduct(new ProductDto[] {});
+            return result;
+        }
+        List<Product> products = productService.findByCategory(id);
+        ProductDto[] productsDto = new ProductDto[products.size()];
+        int i = 0;
+        for (Product product : products) {
+            ProductDto dto = new ProductDto();
+            dto.setId(product.getId());
+            dto.setName(product.getName());
+            productsDto[i] = dto;
+            i++;
+        }
+        result.setCount(products.size());
+        result.setProduct(productsDto);
+        return result;
+    }
 
 }

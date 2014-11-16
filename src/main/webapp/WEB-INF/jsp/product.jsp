@@ -9,7 +9,7 @@
     </div>
     <p class="lead"></p>
 
-    <div id="carousel-example-generic" class="carousel slide" data-ride="carousel" data-interval="false">
+    <div id="carousel-example-generic"  class="carousel slide" data-ride="carousel" data-interval="false">
         <!-- Indicators -->
         <ol class="carousel-indicators">
         </ol>
@@ -26,6 +26,9 @@
             <span class="glyphicon glyphicon-chevron-right"></span>
         </a>
     </div>
+    <div id="related">
+    </div>
+
 </div>
 <%@ include file="/WEB-INF/jsp/footer.jsp" %>
 <script src='<c:url value="js/jquery.min.js"/>'></script>

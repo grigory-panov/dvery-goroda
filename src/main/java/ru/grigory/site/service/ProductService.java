@@ -73,4 +73,18 @@ public class ProductService {
     public int getMaxOrderByCategory(long categoryId){
         return productDao.getMaxOrderInCategory(categoryId);
     }
+
+    public List<Product> getRelatedProducts(long id) {
+        return productDao.getRelatedProducts(id);
+    }
+
+    @Transactional(readOnly = false)
+    public void addRelation(long productId, long relationId) {
+        productDao.addRelation(productId, relationId);
+    }
+
+    @Transactional(readOnly = false)
+    public void deleteRelation(long productId, long relationId) {
+        productDao.deleteRelation(productId, relationId);
+    }
 }

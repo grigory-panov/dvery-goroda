@@ -10,7 +10,7 @@
 
 <h3><fmt:message key="partners.header" bundle="${partnersMessages}"/></h3>
 
-<a href='<c:url value="partnerAdd.html"/>'><fmt:message key="partner.add.link" bundle="${partnersMessages}"/></a>
+<a href='<c:url value="partnerAdd.html"/>' class="btn btn-primary"><fmt:message key="partner.add.link" bundle="${partnersMessages}"/></a>
 
 <c:if test="${not empty partners}">
 

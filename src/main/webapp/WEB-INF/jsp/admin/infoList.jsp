@@ -10,7 +10,7 @@
 
 <h3>${category.name}</h3>
 
-<a href='<c:url value="infoAdd.html"/>'><fmt:message key="info.add.link" bundle="${info}"/></a>
+<a href='<c:url value="infoAdd.html"/>' class="btn btn-primary"><fmt:message key="info.add.link" bundle="${info}"/></a>
 
 <c:if test="${not empty infos}">
     <table class="table">

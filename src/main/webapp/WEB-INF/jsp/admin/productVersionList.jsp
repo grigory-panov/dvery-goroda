@@ -10,7 +10,7 @@
 
 <h3><a href='<c:url value="categoryList.html"/>'>${category.name}</a> - <a href='<c:url value="productList.html?categoryId=${category.id}"/>'>${product.name}</a></h3>
 
-<a href='<c:url value="productVersionAdd.html?productId=${product.id}"/>'><fmt:message key="version.add.link" bundle="${productMessages}"/></a>
+<a href='<c:url value="productVersionAdd.html?productId=${product.id}"/>' class="btn btn-primary"><fmt:message key="version.add.link" bundle="${productMessages}"/></a>
 
 <c:if test="${not empty productVersions}">
     <table class="table">

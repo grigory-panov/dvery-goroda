@@ -206,6 +206,8 @@ public class ProductController {
         } else {
             params.put("category", categoryService.findById(product.getCategoryId()));
         }
+        params.put("productRelations", productService.getRelatedProducts(productId));
+        params.put("productVersions", productVersionService.findByProduct(productId));
         params.put("categories", categoryService.findAll());
         params.put("global", settingsService.findAllAsMap());
         params.put("product", product);
@@ -294,7 +296,53 @@ public class ProductController {
         return result;
     }
 
+    @RequestMapping(value = "/related", method = RequestMethod.GET)
+    public
+    @ResponseBody
+    ProductListDto getProductRelatedJSON(@RequestParam(value = "id") long id) {
 
+        ProductListDto result = new ProductListDto();
+        Product product = productService.findById(id);
+        if(product == null){
+            return result;
+        }
+        List<Product> relatedProducts = productService.getRelatedProducts(id);
+        result.setProduct(new ProductDto[relatedProducts.size()]);
+        int i = 0;
+        for(Product p : relatedProducts){
+            ProductDto dto = new ProductDto();
+            dto.setId(p.getId());
+            dto.setName(p.getName());
+            dto.setDescription(p.getDescription());
+            result.getProduct()[i++] = dto;
+        }
+        return result;
+    }
+
+    @RequestMapping(value = "admin/productRelationAdd.html", method = RequestMethod.GET)
+    @Secured(value = "ROLE_ADMIN")
+    public ModelAndView addProductRelation(@RequestParam(value = "productId") long productId) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("categories", categoryService.findAll());
+        params.put("product", productService.findById(productId));
+        params.put("global", settingsService.findAllAsMap());
+        params.put("title", "Добавление товара");
+
+        return new ModelAndView("admin/productRelationAdd", params);
+    }
+
+    @RequestMapping(value = "admin/productEdit.html", method = RequestMethod.POST)
+    @Secured(value = "ROLE_ADMIN")
+    public String saveProductRelation(@RequestParam(value = "productId") long productId,
+                                            @RequestParam(value = "product") long relationId) {
+        String code = "OK";
+        try {
+            productService.addRelation(productId, relationId);
+        }catch (Exception ex){
+            code = "error";
+        }
+        return "redirect:/admin/productEdit.html?id=" +productId +"&message="+ code;
+    }
 
     private void storeFile(MultipartFile file, Long productVersionId, Long productId) throws IOException {
         BufferedImage image = ImageIO.read(file.getInputStream());

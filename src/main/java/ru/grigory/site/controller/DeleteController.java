@@ -351,5 +351,21 @@ public class DeleteController {
         return result;
     }
 
+    @RequestMapping(value="/delete/relation/{productId}/{relationId}", method = RequestMethod.DELETE)
+    @Secured(value = "ROLE_ADMIN")
+    public @ResponseBody
+    DeleteResult deleteRelationJSON(@PathVariable(value = "productId") long productId,
+                                    @PathVariable(value = "relationId") long relationId) {
+
+        DeleteResult result = new DeleteResult();
+        result.setError("OK");
+        try{
+            productService.deleteRelation(productId, relationId);
+        }catch (Exception ex){
+            result.setError("Произошла ошибка при удалении");
+            return result;
+        }
+        return result;
+    }
 
 }
