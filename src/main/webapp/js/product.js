@@ -87,6 +87,10 @@ function loadRelated(productId){
                     var thumbnail = $("<div class=\"thumbnail\"/>");
                     var image = $("<a href=\"product.html?id="+ json.product[i].id +"\"><img src=\"image/product/"+ json.product[i].id +"\"/></a>");
                     image.appendTo(thumbnail);
+                    var caption = $("<div class=\"caption\"/>");
+                    caption.appendTo(thumbnail);
+                    $("<h4/>").text(json.product[i].name).appendTo(caption);
+                    $("<p>").text(json.product[i].description).appendTo(caption);
                     thumbnail.appendTo(wrapper);
                     wrapper.appendTo(row);
                 }
