@@ -63,18 +63,16 @@ public class ImagesController {
     }
 
     private byte[] imgIfChanged(HttpServletRequest request, HttpServletResponse response, byte[] img) {
+        // expires and max-age headers will set by filter, just handle Etag header
         String cashHeader = request.getHeader("If-None-Match");
         String md5 = DigestUtils.md5DigestAsHex(img);
+        response.setHeader("ETag", md5);
         if(cashHeader != null){
             if(md5.equals(cashHeader)){
-                response.setHeader("Cash-Control", "max-age=120");
-                response.setHeader("ETag", md5);
                 response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                 return null;
             }
         }
-        response.setHeader("Cash-Control", "max-age=120");
-        response.setHeader("ETag", md5);
         return img;
     }
 
