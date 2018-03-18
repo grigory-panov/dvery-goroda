@@ -1,0 +1,3 @@
+<Context>
+    <ResourceLink name="jdbc/PostgreSQLDS" global="jdbc/PostgreSQLDS" type="javax.sql.DataSource"/>
+</Context>

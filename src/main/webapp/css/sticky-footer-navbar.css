@@ -38,6 +38,11 @@ code {
   font-size: 80%;
 }
 
+.main{
+    background-image: url("../img/texture_main_page.jpg");
+    background-repeat: no-repeat;
+}
+
 .loading{
   height:30px;
   position:absolute;
@@ -53,4 +58,77 @@ code {
 .img600{
     height:600px !important;
     width:auto;
+}
+
+.texture_horizontal{
+  background-image: url("../img/texture-horizontal.png");
+}
+
+.texture_vertical{
+  background-image: url("../img/texture-vertical.png");
+}
+
+.texture{
+  background-image: url("../img/texture.png");
+}
+
+.color_box{
+    width: 75px;
+    height : 55px;
+    line-height: 55px;
+    cursor: pointer;
+    display: inline-block;
+    text-align: center;
+    vertical-align: middle;
+}
+
+.bleached{
+    background-color: #c6c7cc;
+}
+
+.sandal{
+    background-color: #784323;
+}
+
+.coffee{
+    background-color: #2e2423;
+    color: white;
+}
+
+.pear{
+    background-color: #301712;
+    color: white;
+}
+
+.venge{
+    background-color: #160c0d;
+    color: white;
+}
+
+.valnut{
+    background-color: #50281e;
+    color: white;
+}
+
+.black{
+    background-color: black;
+    color: white;
+}
+
+.white{
+    background-color: white;
+}
+
+.selected_color{
+    border-size:3px;
+    border-style:solid;
+    border-color:navy;
+    line-height: 49px;
+}
+
+#room{
+    width:100%;
+    text-align: center;
+    padding-top:50px;
+    background-color: #ffe8be;
 }

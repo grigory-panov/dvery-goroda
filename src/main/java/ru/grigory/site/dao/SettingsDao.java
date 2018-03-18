@@ -31,18 +31,18 @@ public class SettingsDao {
 
     public Settings findByKey(String key) throws SettingsNotFoundException {
         try {
-            return jdbcTemplate.queryForObject("select * from settings where key=?", new SettingsMapper(), key);
+            return jdbcTemplate.queryForObject("select * from dveri.settings where key=?", new SettingsMapper(), key);
         } catch (EmptyResultDataAccessException ex) {
             throw new SettingsNotFoundException("key=" + key);
         }
     }
 
     public List<Settings> findAll() {
-        return jdbcTemplate.query("select * from settings order by key", new SettingsMapper());
+        return jdbcTemplate.query("select * from dveri.settings order by key", new SettingsMapper());
     }
 
     public Map<String, String> findAllAsMap() {
-        List<Settings> list = jdbcTemplate.query("select * from settings", new SettingsMapper());
+        List<Settings> list = jdbcTemplate.query("select * from dveri.settings", new SettingsMapper());
         Map<String, String> result = new HashMap<String, String>(list.size());
         for(Settings s : list){
             result.put(s.getKey(), s.getValue());
@@ -51,7 +51,7 @@ public class SettingsDao {
     }
 
     public void update(Settings settings){
-        jdbcTemplate.update("update settings set value=?, description=? where key =?",
+        jdbcTemplate.update("update dveri.settings set value=?, description=? where key =?",
                 settings.getValue(), settings.getDescription(), settings.getKey() );
     }
 }

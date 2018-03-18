@@ -27,29 +27,29 @@ public class FeedbackDao {
     }
 
     public int countApproved() {
-        return jdbcTemplate.queryForObject("select count (*) from feedback where approved=true and deleted=false", Integer.class);
+        return jdbcTemplate.queryForObject("select count (*) from dveri.feedback where approved=true and deleted=false", Integer.class);
     }
 
     public List<Feedback> getPageApproved(int from, int to) {
-        return jdbcTemplate.query("select * from feedback where approved=true and deleted = false order by date_add desc offset ? limit ?", new FeedbackMapper(), from, to);
+        return jdbcTemplate.query("select * from dveri.feedback where approved=true and deleted = false order by date_add desc offset ? limit ?", new FeedbackMapper(), from, to);
     }
 
     public int count() {
-        return jdbcTemplate.queryForObject("select count (*) from feedback where deleted = false", Integer.class);
+        return jdbcTemplate.queryForObject("select count (*) from dveri.feedback where deleted = false", Integer.class);
     }
 
     public List<Feedback> getPage(int from, int to) {
-        return jdbcTemplate.query("select * from feedback where deleted=false order by date_add desc offset ? limit ?", new FeedbackMapper(), from, to);
+        return jdbcTemplate.query("select * from dveri.feedback where deleted=false order by date_add desc offset ? limit ?", new FeedbackMapper(), from, to);
     }
 
 
     public void addFeedback(Feedback fb) {
-        jdbcTemplate.update("insert into feedback (author, date_add, text, ip, country, city) values(?, now(), ?, ?, ?,?)",
+        jdbcTemplate.update("insert into dveri.feedback (author, date_add, text, ip, country, city) values(?, now(), ?, ?, ?,?)",
                 fb.getAuthor(), fb.getText(), fb.getIp(), fb.getCountry(), fb.getCity());
     }
 
     public void approve(Long id){
-        jdbcTemplate.update("update feedback set approved = true, date_approve=now() where id=?", id);
+        jdbcTemplate.update("update dveri.feedback set approved = true, date_approve=now() where id=?", id);
     }
 
     public void delete(Long id){
@@ -58,6 +58,6 @@ public class FeedbackDao {
 
 
     public Feedback findByIdWithDeleted(long id) {
-        return jdbcTemplate.queryForObject("select * from feedback where id=?", new FeedbackMapper(), id);
+        return jdbcTemplate.queryForObject("select * from dveri.feedback where id=?", new FeedbackMapper(), id);
     }
 }

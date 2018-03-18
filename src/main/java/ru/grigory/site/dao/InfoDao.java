@@ -30,11 +30,11 @@ public class InfoDao {
 
 
     public List<Info> findAll() {
-        return jdbcTemplate.query("select * from info where deleted = false order by date_add desc", new InfoMapper());
+        return jdbcTemplate.query("select * from dveri.info where deleted = false order by date_add desc", new InfoMapper());
     }
 
     public Info findById(long id) {
-        String query = "select * from info where deleted = false and id = ?";
+        String query = "select * from dveri.info where deleted = false and id = ?";
         try {
             return jdbcTemplate.queryForObject(query, new InfoMapper(), id);
         } catch (EmptyResultDataAccessException ex) {
@@ -43,7 +43,7 @@ public class InfoDao {
     }
 
     public Info findByIdWithDeleted(long id) {
-        String query = "select * from info where id = ?";
+        String query = "select * from dveri.info where id = ?";
         try {
             return jdbcTemplate.queryForObject(query, new InfoMapper(), id);
         } catch (EmptyResultDataAccessException ex) {
@@ -53,26 +53,26 @@ public class InfoDao {
 
 
     public void add(Info info) {
-        jdbcTemplate.update("insert into info (header, body, date_add) values (?, ?, now())",
+        jdbcTemplate.update("insert into dveri.info (header, body, date_add) values (?, ?, now())",
                 info.getHeader(), info.getBody());
     }
 
     public void update(Info info) {
-        jdbcTemplate.update("update info set header = ?, body=? where id =?",
+        jdbcTemplate.update("update dveri.info set header = ?, body=? where id =?",
                 info.getHeader(), info.getBody(), info.getId());
     }
 
     public void delete(long id){
-        jdbcTemplate.update("update info set deleted = true where id=?", id);
+        jdbcTemplate.update("update dveri.info set deleted = true where id=?", id);
     }
 
     public void restore(long id){
-        jdbcTemplate.update("update info set deleted = false where id=?", id);
+        jdbcTemplate.update("update dveri.info set deleted = false where id=?", id);
     }
 
 
     public List<Info> findDeleted(){
-         return jdbcTemplate.query("select * from info where deleted = true", new InfoMapper());
+         return jdbcTemplate.query("select * from dveri.info where deleted = true", new InfoMapper());
     }
 
 }

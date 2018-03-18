@@ -25,44 +25,44 @@ public class PartnerDao {
 
 
     public List<Partner> findAll() {
-        return jdbcTemplate.query("select * from partner where deleted = false order by id", new PartnerMapper());
+        return jdbcTemplate.query("select * from dveri.partner where deleted = false order by id", new PartnerMapper());
     }
 
     public Partner findById(long partnerId) {
         try {
-            return jdbcTemplate.queryForObject("select * from partner where id=? and deleted = false", new PartnerMapper(), partnerId);
+            return jdbcTemplate.queryForObject("select * from dveri.partner where id=? and deleted = false", new PartnerMapper(), partnerId);
         }catch (EmptyResultDataAccessException ex){
             return null;
         }
     }
 
     public void add(Partner partner){
-        String query = "insert into partner (name, url, banner) values (?,?,?)";
+        String query = "insert into dveri.partner (name, url, banner) values (?,?,?)";
         jdbcTemplate.update(query, partner.getName(), partner.getUrl(), partner.getBanner());
     }
 
     public void update(Partner partner){
-        String query = "update partner set name=?, url=?, banner=? where id=?";
+        String query = "update dveri.partner set name=?, url=?, banner=? where id=?";
         jdbcTemplate.update(query, partner.getName(), partner.getUrl(), partner.getBanner(), partner.getId());
     }
 
     public void delete(Long partnerId){
-        jdbcTemplate.update("update partner set deleted = true where id=?", partnerId);
+        jdbcTemplate.update("update dveri.partner set deleted = true where id=?", partnerId);
     }
 
     public void restore(Long partnerId){
-        jdbcTemplate.update("update partner set deleted = false where id=?", partnerId);
+        jdbcTemplate.update("update dveri.partner set deleted = false where id=?", partnerId);
     }
 
     public Partner findByIdWithDeleted(long id) {
         try {
-            return jdbcTemplate.queryForObject("select * from partner where id=?", new PartnerMapper(), id);
+            return jdbcTemplate.queryForObject("select * from dveri.partner where id=?", new PartnerMapper(), id);
         }catch (EmptyResultDataAccessException ex){
             return null;
         }
     }
 
     public List<Partner> findDeleted() {
-        return jdbcTemplate.query("select * from partner where deleted = true order by id", new PartnerMapper());
+        return jdbcTemplate.query("select * from dveri.partner where deleted = true order by id", new PartnerMapper());
     }
 }

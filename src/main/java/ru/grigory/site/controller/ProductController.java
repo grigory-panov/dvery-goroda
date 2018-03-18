@@ -346,7 +346,7 @@ public class ProductController {
 
     private void storeFile(MultipartFile file, Long productVersionId, Long productId) throws IOException {
         BufferedImage image = ImageIO.read(file.getInputStream());
-        ImageIO.write(Scalr.resize(image, 800), "png", new File(getStorageDir(), productId + "_" + productVersionId + ".png"));
-        ImageIO.write(Scalr.resize(image, 200), "png",  new File(getStorageDir(), productId + "_" + productVersionId + "_thumb.png"));
+        ImageIO.write(Scalr.resize(image, Scalr.Method.QUALITY, Math.min(800, Math.max(image.getHeight(), image.getWidth()))), "png", new File(getStorageDir(), productId + "_" + productVersionId + ".png"));
+        ImageIO.write(Scalr.resize(image, Scalr.Method.QUALITY, 200), "png",  new File(getStorageDir(), productId + "_" + productVersionId + "_thumb.png"));
     }
 }

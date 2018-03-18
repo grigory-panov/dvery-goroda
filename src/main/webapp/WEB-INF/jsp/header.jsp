@@ -4,6 +4,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="${global.description}">
+    <meta name="keywords" content="${global.keywords}">
     <meta name="author" content="${global.author}">
     <link rel="icon" href='<c:url value="icons/favicon.ico"/>'>
 
@@ -14,6 +15,14 @@
 
     <!-- Custom styles for this template -->
     <link href='<c:url value="css/sticky-footer-navbar.css"/>' rel="stylesheet">
+
+    <!-- Color picker CSS -->
+    <link href='<c:url value="css/bootstrap-colorpicker.min.css"/>' rel="stylesheet">
+
+    <!-- Image select CSS -->
+
+    <link rel="stylesheet" href='<c:url value="css/image-select.css"/>'>
+    <link rel="stylesheet" href='<c:url value="css/chosen.min.css"/>'>
 
 </head>
 
@@ -38,7 +47,7 @@
                     <span class="caret"></span></a>
                     <ul class="dropdown-menu" role="menu">
                         <c:forEach var="i" items="${categories}">
-                        <li><a href='<c:url value="index.html?category=${i.id}"/>'><c:out value="${i.name}"/></a></li>
+                        <li><a href='<c:url value="category.html?category=${i.id}"/>'><c:out value="${i.name}"/></a></li>
                         </c:forEach>
                         <!--<li class="divider"></li>
                         <li class="dropdown-header"></li>-->

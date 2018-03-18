@@ -11,11 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import ru.grigory.site.domain.Category;
 import ru.grigory.site.domain.Partner;
+import ru.grigory.site.domain.Product;
 import ru.grigory.site.domain.ProductVersion;
-import ru.grigory.site.service.PartnerService;
-import ru.grigory.site.service.ProductVersionService;
-import ru.grigory.site.service.SettingsService;
+import ru.grigory.site.service.*;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
@@ -37,6 +37,12 @@ public class ImagesController {
 
     @Autowired
     private ProductVersionService productVersionService;
+
+    @Autowired
+    private CategoryService categoryService;
+
+    @Autowired
+    private ProductService productService;
 
     @Autowired
     private SettingsService settingsService;
@@ -63,7 +69,6 @@ public class ImagesController {
     }
 
     private byte[] imgIfChanged(HttpServletRequest request, HttpServletResponse response, byte[] img) {
-        // expires and max-age headers will set by filter, just handle Etag header
         String cashHeader = request.getHeader("If-None-Match");
         String md5 = DigestUtils.md5DigestAsHex(img);
         response.setHeader("ETag", md5);
@@ -118,5 +123,24 @@ public class ImagesController {
         }
         return imgIfChanged(request, response, partner.getBanner());
     }
+
+//    @RequestMapping(value = "/resize", method = RequestMethod.GET)
+//    public void getImgPartner(HttpServletRequest request, HttpServletResponse response) throws IOException {
+//
+//        Category c = categoryService.findById(14);
+//            for(Product product : productService.findByCategory(c.getId())){
+//                for(ProductVersion pv: productVersionService.findByProduct(product.getId())){
+//                    File f = new File(getStorageDir(), product.getId() + "_" + pv.getId() + ".png");
+//                    BufferedImage image = ImageIO.read(new FileInputStream(f));
+//                    ImageIO.getImageWriter().
+//                    ImageIO.write(
+//                            Scalr.resize(image, Scalr.Method.SPEED,
+//                                    Math.min(800, Math.max(image.getHeight(), image.getWidth()))), "png",
+//                            f);
+//                    response.getWriter().write("processed " + f.getAbsolutePath() + "\n");
+//                }
+//            }
+//        response.getWriter().write("OK");
+//    }
 
 }

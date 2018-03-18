@@ -53,9 +53,18 @@ public class CategoryController {
         Map<String, Object> params = new HashMap<String, Object>();
         params.put("categories", categoryService.findAll());
         params.put("global", settingsService.findAllAsMap());
-        params.put("title", "Cписок товаров");
+        params.put("title", settingsService.findByKey("project_name").getValue());
 
         return new ModelAndView("index", params);
+    }
+    @RequestMapping(value = "category.html", method = RequestMethod.GET)
+    public ModelAndView getCategory(@RequestParam(value = "id", required = false) Long categoryId) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("categories", categoryService.findAll());
+        params.put("global", settingsService.findAllAsMap());
+        params.put("title", settingsService.findByKey("project_name").getValue());
+
+        return new ModelAndView("category", params);
     }
 
     @RequestMapping(value = "admin/index.html", method = {RequestMethod.GET, RequestMethod.POST})
